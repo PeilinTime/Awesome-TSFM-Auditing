@@ -1,0 +1,26 @@
+{
+ "status": "ok",
+ "date": "2026-09-26",
+ "window_since": "2026-07-28",
+ "queries": [
+  {
+   "name": "api: ts x audit (strong)",
+   "results": 0,
+   "error": "HTTPError: HTTP Error 406: Not Acceptable"
+  },
+  {
+   "name": "oai: sets cs,stat from 2026-07-28",
+   "results": 50229,
+   "newest": "2026-09-24"
+  }
+ ],
+ "stats": {
+  "source": "oai",
+  "queries": 2,
+  "fetched": 50229,
+  "in_window": 36124,
+  "dropped_seen": 1,
+  "dropped_offtopic": 36046,
+  "new": 77
+ }
+}
