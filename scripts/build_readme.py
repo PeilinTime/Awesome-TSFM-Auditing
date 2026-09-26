@@ -154,34 +154,99 @@ def validate(data: dict) -> list[str]:
 
 
 # ----------------------------------------------------------------------------- rendering
+def h(text) -> str:
+    """Escape text for an HTML cell and render the little markdown we use in notes (`code`, *em*, **strong**)."""
+    t = html.escape(re.sub(r"\s+", " ", str(text or "")).strip(), quote=False)
+    t = re.sub(r"`([^`]+)`", r"<code>\1</code>", t)
+    t = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", t)
+    t = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", t)
+    return t
+
+
+def html_links(p: dict) -> str:
+    out = []
+    if p.get("arxiv"):
+        out.append(f'<a href="https://arxiv.org/abs/{p["arxiv"]}">arXiv</a>')
+    elif p.get("url"):
+        out.append(f'<a href="{html.escape(p["url"])}">Paper</a>')
+    if p.get("code"):
+        out.append(f'<a href="{html.escape(p["code"])}">Code</a>')
+    if p.get("corpus_url"):
+        out.append(f'<a href="{html.escape(p["corpus_url"])}">Corpus</a>')
+    return " · ".join(out)
+
+
+def html_badges(p: dict) -> str:
+    if not (p.get("level") or p.get("access")):
+        return ""
+    imgs = []
+    for tag in ("level", "access", "domain"):
+        v = p.get(tag)
+        spec = (TAGS.get(tag) or {}).get("values", {}).get(v) if v else None
+        if not spec:
+            continue
+        label = (TAGS[tag].get("label") or tag).lower()
+        enc = lambda x: x.replace("-", "--").replace("_", "__").replace(" ", "_")
+        imgs.append(f'<img alt="{label}: {v}" src="https://img.shields.io/badge/{enc(label)}-{enc(v)}-{spec["color"]}?style=flat-square">')
+    return " ".join(imgs)
+
+
+def html_paper_cell(p: dict) -> str:
+    url = paper_link(p)
+    title = h(p["title"])
+    head = f'<a href="{html.escape(url)}">{title}</a>' if url else title
+    out = f"{head}<br><sub>{h(p.get('authors'))}</sub>"
+    badges = html_badges(p)
+    if badges:
+        out += f"<br>{badges}"
+    return out
+
+
+def html_abstract_row(p: dict, ncols: int) -> str:
+    abstract = abstract_of(p)
+    if not abstract:
+        return ""
+    return f'<tr><td colspan="{ncols}"><details><summary><sub>Abstract</sub></summary><sub>{h(abstract)}</sub></details></td></tr>'
+
+
+LAYOUTS_HTML = {
+    # layout: (header cells with width hints, row-builder)
+    "method": (
+        ['<th width="5%">Year</th>', '<th width="30%">Paper</th>', '<th width="8%">Venue</th>',
+         '<th width="24%">Signal</th>', '<th width="26%">Transfer to TSFMs</th>', '<th width="7%">Links</th>'],
+        lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("signal")), h(p.get("transfer") or p.get("note")), html_links(p)],
+    ),
+    "model": (
+        ['<th width="7%">arXiv v1</th>', '<th width="10%">Model</th>', '<th width="26%">Paper</th>', '<th width="8%">Venue</th>',
+         '<th width="24%">Documented pretraining corpus</th>', '<th width="17%">Output / note</th>', '<th width="8%">Links</th>'],
+        lambda p: [arxiv_month(p), f"<strong>{h(p.get('model') or p['title'])}</strong>", html_paper_cell(p), h(p["venue"]), h(p.get("corpus")), h(p.get("note")), html_links(p)],
+    ),
+    "benchmark": (
+        ['<th width="5%">Year</th>', '<th width="34%">Paper</th>', '<th width="9%">Venue</th>', '<th width="44%">Leakage handling / note</th>', '<th width="8%">Links</th>'],
+        lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("note") or p.get("transfer")), html_links(p)],
+    ),
+    "plain": (
+        ['<th width="5%">Year</th>', '<th width="34%">Paper</th>', '<th width="9%">Venue</th>', '<th width="44%">Takeaway</th>', '<th width="8%">Links</th>'],
+        lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("note") or p.get("transfer")), html_links(p)],
+    ),
+}
+
+
 def render_table(layout: str, papers: list[dict]) -> str:
-    if layout == "method":
-        header = "| Year | Paper | Venue | Signal | Transfer to TSFMs | Links |\n|---|---|---|---|---|---|"
-        rows = [
-            f"| {p['year']} | {title_cell(p)} | {cell(p['venue'])} | "
-            f"{cell(p.get('signal'))} | {cell(p.get('transfer') or p.get('note'))} | {links(p)} |"
-            for p in papers
-        ]
-    elif layout == "model":
-        header = "| arXiv v1 | Model | Paper | Venue | Documented pretraining corpus | Output / note | Links |\n|---|---|---|---|---|---|---|"
-        rows = [
-            f"| {arxiv_month(p)} | **{cell(p.get('model') or p['title'])}** | {title_cell(p)} | {cell(p['venue'])} | "
-            f"{cell(p.get('corpus'))} | {cell(p.get('note'))} | {links(p)} |"
-            for p in papers
-        ]
-    elif layout == "benchmark":
-        header = "| Year | Paper | Venue | Leakage handling / note | Links |\n|---|---|---|---|---|"
-        rows = [
-            f"| {p['year']} | {title_cell(p)} | {cell(p['venue'])} | {cell(p.get('note') or p.get('transfer'))} | {links(p)} |"
-            for p in papers
-        ]
-    else:  # plain
-        header = "| Year | Paper | Venue | Takeaway | Links |\n|---|---|---|---|---|"
-        rows = [
-            f"| {p['year']} | {title_cell(p)} | {cell(p['venue'])} | {cell(p.get('note') or p.get('transfer'))} | {links(p)} |"
-            for p in papers
-        ]
-    return "\n".join([header, *rows])
+    """One HTML table per section. HTML (rather than a markdown table) lets the abstract sit in a
+    full-width collapsible row under each entry. No blank lines inside: a blank line would end
+    the HTML block for the markdown renderer."""
+    headers, row = LAYOUTS_HTML.get(layout, LAYOUTS_HTML["plain"])
+    n = len(headers)
+    lines = ["<table>", "<thead><tr>" + "".join(headers) + "</tr></thead>", "<tbody>"]
+    for p in papers:
+        cells = "".join(f"<td>{c}</td>" for c in row(p))
+        lines.append(f"<tr>{cells}</tr>")
+        ab = html_abstract_row(p, n)
+        if ab:
+            lines.append(ab)
+    lines += ["</tbody>", "</table>"]
+    return "\n".join(lines)
 
 
 def build(data: dict) -> str:
