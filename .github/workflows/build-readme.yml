@@ -1,0 +1,45 @@
+name: Build README
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "papers.yaml"
+      - "templates/**"
+      - "scripts/build_readme.py"
+  pull_request:
+    paths:
+      - "papers.yaml"
+      - "templates/**"
+      - "scripts/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate papers.yaml and regenerate README.md
+        run: python scripts/build_readme.py
+
+      - name: Smoke-test the watcher on a fixture
+        run: python scripts/arxiv_watch.py --fixture tests/fixture.xml --days 36500 --dry-run > /dev/null
+
+      - name: Commit regenerated README
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --cached --quiet || git commit -m "docs: regenerate README from papers.yaml"
+          git push

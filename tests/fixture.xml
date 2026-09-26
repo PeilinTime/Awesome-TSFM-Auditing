@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:arxiv="http://arxiv.org/schemas/atom">
+  <title>ArXiv Query: test</title>
+  <entry>
+    <id>http://arxiv.org/abs/2609.11111v1</id>
+    <updated>2026-09-20T10:00:00Z</updated>
+    <published>2026-09-20T10:00:00Z</published>
+    <title>Membership Inference for Time Series Foundation Models via
+  Forecast Residuals</title>
+    <summary>We study membership inference attacks against time series foundation models using forecast residuals and show that data contamination inflates zero-shot benchmark scores.</summary>
+    <author><name>Alice Example</name></author>
+    <author><name>Bob Example</name></author>
+    <author><name>Carol Example</name></author>
+    <author><name>Dan Example</name></author>
+    <arxiv:comment>12 pages</arxiv:comment>
+    <category term="cs.LG"/><category term="stat.ML"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.22222v2</id>
+    <updated>2026-09-22T10:00:00Z</updated>
+    <published>2026-09-15T10:00:00Z</published>
+    <title>A Calibrated Score for Pretraining Data Detection in Large Language Models</title>
+    <summary>We propose a new pretraining data detection method for large language models based on calibrated token probabilities, improving over Min-K% on WikiMIA.</summary>
+    <author><name>Eve Example</name></author>
+    <category term="cs.CL"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.33333v1</id>
+    <updated>2026-09-18T10:00:00Z</updated>
+    <published>2026-09-18T10:00:00Z</published>
+    <title>Efficient Long-Horizon Time Series Forecasting with Sparse Attention</title>
+    <summary>We propose a new attention mechanism for long-horizon forecasting and evaluate it on standard benchmarks.</summary>
+    <author><name>Frank Example</name></author>
+    <category term="cs.LG"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.26161v1</id>
+    <updated>2026-05-24T10:00:00Z</updated>
+    <published>2026-05-24T10:00:00Z</published>
+    <title>TSFMAudit: Data Contamination Auditing in Forecasting Time Series Foundation Models</title>
+    <summary>already listed; should be dropped</summary>
+    <author><name>Hongkai Li</name></author>
+    <category term="cs.LG"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2601.44444v1</id>
+    <updated>2026-01-05T10:00:00Z</updated>
+    <published>2026-01-05T10:00:00Z</published>
+    <title>Old paper outside the window about membership inference on time series</title>
+    <summary>membership inference time series</summary>
+    <author><name>Grace Example</name></author>
+    <category term="cs.LG"/>
+  </entry>
+</feed>

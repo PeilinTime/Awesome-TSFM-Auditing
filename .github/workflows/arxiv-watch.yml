@@ -1,0 +1,70 @@
+name: arXiv watch
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"        # every Monday 06:17 UTC
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Look-back window in days (leave empty = since last run)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: arxiv-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60   # the arXiv API can throttle for minutes at a time; the client backs off up to ~9 min per query
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Query arXiv
+        id: watch
+        env:
+          DAYS: ${{ github.event.inputs.days }}
+          OPENALEX_MAILTO: ${{ vars.OPENALEX_MAILTO }}   # optional repo variable: contact e-mail for OpenAlex's polite pool (fallback source)
+        run: |
+          if [ -n "$DAYS" ]; then
+            python scripts/arxiv_watch.py --days "$DAYS"
+          else
+            python scripts/arxiv_watch.py
+          fi
+
+      # The watch state (what has been seen, when the last run was) goes straight to main,
+      # so closing a review PR without merging does not re-propose the same papers next week.
+      - name: Commit watch state
+        if: always()
+        env:
+          COUNT: ${{ steps.watch.outputs.count }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/seen.json data/state.json data/last_run.json
+          git diff --cached --quiet || git commit -m "arXiv watch: update state ($(date -u +%F), ${COUNT:-0} candidates, ${{ job.status }})"
+          git pull --rebase origin main
+          git push
+
+      # Only the candidate report is left uncommitted at this point; it becomes the PR.
+      - name: Open review pull request
+        if: success() && steps.watch.outputs.count != '0'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "arXiv watch: ${{ steps.watch.outputs.count }} new candidates (${{ steps.watch.outputs.date }})"
+          branch: arxiv-watch/${{ steps.watch.outputs.date }}
+          delete-branch: true
+          title: "arXiv watch: ${{ steps.watch.outputs.count }} new candidate papers (${{ steps.watch.outputs.date }})"
+          body-path: ${{ steps.watch.outputs.report }}

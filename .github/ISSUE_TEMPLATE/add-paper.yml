@@ -1,0 +1,44 @@
+name: Add a paper
+description: Suggest a paper for the list
+title: "[paper] "
+labels: ["paper-suggestion"]
+body:
+  - type: input
+    id: link
+    attributes:
+      label: arXiv id or URL
+      placeholder: "2410.10880"
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - tsfm-auditing
+        - tsfm-leakage-eval
+        - ts-mia
+        - llm-finetune
+        - llm-loss-reference
+        - llm-score
+        - llm-dataset-level
+        - llm-benchmark-contamination
+        - pitfalls
+        - surveys
+        - provenance
+        - lookahead
+        - tsfm-models
+        - ts-benchmarks
+    validations:
+      required: true
+  - type: textarea
+    id: transfer
+    attributes:
+      label: Why does it belong here?
+      description: For LLM / general-ML methods, say which TSFM-available signal it uses (loss, likelihood, embeddings, gradients, fine-tuning) and how it would transfer.
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: Official code (optional)
