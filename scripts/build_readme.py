@@ -74,6 +74,9 @@ def title_cell(p: dict, label_key: str = "title") -> str:
     title = cell(p[label_key])
     head = f"[{title}]({url})" if url else title
     out = f"{head}<br><sub>{cell(p.get('authors'))}</sub>"
+    badges = tag_badges(p)
+    if badges:
+        out += f"<br>{badges}"
     abstract = abstract_of(p)
     if abstract:
         out += f"<details><summary><sub>Abstract</sub></summary><sub>{cell(html.escape(abstract, quote=False))}</sub></details>"
@@ -102,6 +105,8 @@ def badge(tag: str, value: str) -> str:
 
 
 def tag_badges(p: dict) -> str:
+    if not (p.get("level") or p.get("access")):
+        return ""
     return " ".join(badge(t, p[t]) for t in ("level", "access", "domain") if p.get(t))
 
 
@@ -151,9 +156,9 @@ def validate(data: dict) -> list[str]:
 # ----------------------------------------------------------------------------- rendering
 def render_table(layout: str, papers: list[dict]) -> str:
     if layout == "method":
-        header = "| Year | Paper | Venue | Tags | Signal | Transfer to TSFMs | Links |\n|---|---|---|---|---|---|---|"
+        header = "| Year | Paper | Venue | Signal | Transfer to TSFMs | Links |\n|---|---|---|---|---|---|"
         rows = [
-            f"| {p['year']} | {title_cell(p)} | {cell(p['venue'])} | {tag_badges(p)} | "
+            f"| {p['year']} | {title_cell(p)} | {cell(p['venue'])} | "
             f"{cell(p.get('signal'))} | {cell(p.get('transfer') or p.get('note'))} | {links(p)} |"
             for p in papers
         ]
