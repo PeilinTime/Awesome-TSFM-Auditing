@@ -1,4 +1,4 @@
-<!-- THIS FILE IS GENERATED from papers.yaml by scripts/build_readme.py — edit papers.yaml, not README.md -->
+<!-- THIS FILE IS GENERATED from papers.yaml by scripts/build_readme.py; edit papers.yaml, not README.md -->
 # Awesome TSFM Auditing [![Awesome](https://awesome.re/badge.svg)](https://awesome.re) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![arXiv watch](https://github.com/{{REPO}}/actions/workflows/arxiv-watch.yml/badge.svg)](https://github.com/{{REPO}}/actions/workflows/arxiv-watch.yml) ![papers](https://img.shields.io/badge/papers-{{N_PAPERS}}-blue) ![updated](https://img.shields.io/badge/updated-{{DATE}}-lightgrey)
 
 A curated list of papers on **auditing the pretraining data of time series foundation models (TSFMs)**: pretraining-data / contamination auditing, membership inference, information leakage in TSFM evaluation, and relevant methods from the LLM/NLP domain that may be transferable to time series with minor modifications.
@@ -13,19 +13,27 @@ A curated list of papers on **auditing the pretraining data of time series found
 
 {{SECTIONS}}
 
+<<<<<<< Updated upstream
+=======
 
 ## Related Lists
 
-- [lyy1994/awesome-data-contamination](https://github.com/lyy1994/awesome-data-contamination) — data contamination for LLM evaluation
-- [yale-nlp/lm-contamination-survey](https://github.com/yale-nlp/lm-contamination-survey) — paper list accompanying the ACL 2024 survey
-- [velvinnn/LLM_MIA](https://github.com/velvinnn/LLM_MIA) — case studies for *Does Data Contamination Detection Work (Well) for LLMs?*
-- [iamgroot42/mimir](https://github.com/iamgroot42/mimir) — MIMIR: reference implementations of LLM membership inference attacks
-- [CryptoAILab/Awesome-LM-SSP](https://github.com/CryptoAILab/Awesome-LM-SSP) — safety, security and privacy of large models (has a membership-inference section)
+Benchmark contamination detection for LLM evaluation is outside the scope of this list; for that topic see:
+
+- [lyy1994/awesome-data-contamination](https://github.com/lyy1994/awesome-data-contamination): data contamination in LLM evaluation
+- [yale-nlp/lm-contamination-survey](https://github.com/yale-nlp/lm-contamination-survey): paper list accompanying the ACL 2024 survey
+>>>>>>> Stashed changes
+
+Membership inference on language models:
+
+- [iamgroot42/mimir](https://github.com/iamgroot42/mimir): MIMIR, reference implementations of LLM membership inference attacks
+- [velvinnn/LLM_MIA](https://github.com/velvinnn/LLM_MIA): case studies for *Does Data Contamination Detection Work (Well) for LLMs?*
+- [CryptoAILab/Awesome-LM-SSP](https://github.com/CryptoAILab/Awesome-LM-SSP): safety, security and privacy of large models (has a membership-inference section)
 
 ## Contributing
 
-Contributions are welcome — open a pull request that edits `papers.yaml` (not `README.md`), or open an issue using the *Add a paper* template. Inclusion criteria: the paper audits, attacks, or evaluates the pretraining/training data of a time-series model, **or** it is an LLM / general-ML auditing method whose signal is available from a TSFM (loss, likelihood, embeddings, gradients, fine-tuning) with little modification. Please state the transfer argument in the `transfer` field.
+Contributions are welcome: open a pull request that edits `papers.yaml` (not `README.md`), or open an issue using the *Add a paper* template. Inclusion criteria: the paper audits, attacks, or evaluates the pretraining/training data of a time-series model, **or** it is an LLM / general-ML auditing method whose signal is available from a TSFM (loss, likelihood, embeddings, gradients, fine-tuning) with little modification. Please state the transfer argument in the `transfer` field.
 
 ## License
 
-[CC0 1.0](LICENSE) — to the extent possible under law, the maintainers have waived all copyright and related rights to this list.
+[CC0 1.0](LICENSE). To the extent possible under law, the maintainers have waived all copyright and related rights to this list.

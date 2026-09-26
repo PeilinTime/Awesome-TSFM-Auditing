@@ -10,7 +10,7 @@
 3. Removes anything already listed in papers.yaml or already proposed (data/seen.json).
 4. Scores relevance by keyword hits, assigns Tier A (time-series specific) or
    Tier B (foundation-model auditing; check transferability), and writes
-   candidates/<date>.md — the body of the review pull request.
+   candidates/<date>.md, the body of the review pull request.
 
 Nothing is added to the list automatically; a human merges the PR after review.
 
@@ -54,13 +54,12 @@ AUDIT_STRONG = (
 )
 AUDIT_WEAK = '(abs:memorization OR abs:memorisation OR abs:"lookahead bias" OR abs:"look-ahead bias" OR abs:contamination OR abs:leakage OR abs:auditing)'
 
-# (name, query) — each query is run once per watch
+# (name, query): each query is run once per watch
 QUERIES = [
     ("ts x audit (strong)", f"{TS} AND {AUDIT_STRONG} AND {CATS}"),
     ("ts x audit (weak)", f"{TS} AND {AUDIT_WEAK} AND {CATS}"),
     ("tsfm x leakage/eval", f'(abs:"time series foundation" OR abs:"time-series foundation" OR abs:TSFM OR abs:TSFMs) AND (abs:leakage OR abs:contamination OR abs:memorization OR abs:audit OR abs:auditing OR abs:benchmark) AND {CATS}'),
     ("fm x membership/pretraining-data", f'(abs:"membership inference" OR abs:"pretraining data detection" OR abs:"pre-training data detection" OR abs:"training data detection" OR abs:"dataset inference") AND {FM} AND {CATS}'),
-    ("fm x contamination", f'(abs:"data contamination" OR abs:"benchmark contamination" OR abs:"test set contamination") AND {FM} AND {CATS}'),
 ]
 
 # OpenAlex full-text queries (fallback source; quotes and AND/OR are supported)
@@ -68,7 +67,6 @@ OPENALEX_QUERIES = [
     ("openalex: ts x audit", '"time series" AND ("membership inference" OR "data contamination" OR "pretraining data" OR "pre-training data" OR "training data detection" OR "dataset inference" OR "information leakage" OR "data leakage" OR memorization)'),
     ("openalex: tsfm", '("time series foundation model" OR "time series foundation models") AND (leakage OR contamination OR memorization OR audit OR auditing OR benchmark)'),
     ("openalex: fm x membership", '("foundation model" OR "language model" OR "language models") AND ("membership inference" OR "pretraining data detection" OR "pre-training data detection" OR "training data detection" OR "dataset inference")'),
-    ("openalex: fm x contamination", '("language model" OR "language models" OR "foundation model") AND ("data contamination" OR "benchmark contamination" OR "test set contamination")'),
 ]
 OAI_SETS = ("cs", "stat")
 
@@ -86,9 +84,11 @@ AUDIT_TERMS = {
 # generic words that also occur in unrelated contexts (cloud contamination, leakage current, financial audit ...):
 # on their own they qualify a time-series paper only when a foundation/pretrained-model term is present too
 WEAK_TERMS = {"contamination", "leakage", "audit", "auditing", "provenance"}
+# Tier B is restricted to the pretraining-data auditing vocabulary. Benchmark contamination detection for
+# LLM evaluation (prompt-based tests) is out of scope and is deliberately not matched here.
 STRONG_FOR_TIER_B = {
     "membership inference", "pretraining data detection", "pre-training data detection", "training data detection",
-    "dataset inference", "data contamination", "benchmark contamination", "test set contamination",
+    "dataset inference", "pretraining data", "pre-training data",
 }
 
 
@@ -145,7 +145,7 @@ def fmt_authors(names: list[str]) -> str:
 
 def render_report(date: dt.date, since: dt.date, tiers: dict[str, list], stats: dict) -> str:
     lines = [
-        f"# arXiv watch — {date.isoformat()}",
+        f"# arXiv watch: {date.isoformat()}",
         "",
         f"Window: **{since.isoformat()} → {date.isoformat()}** · queries: {stats['queries']} · fetched: {stats['fetched']} · "
         f"in window: {stats['in_window']} · already listed/seen: {stats['dropped_seen']} · off-topic: {stats['dropped_offtopic']} · "
@@ -161,8 +161,8 @@ def render_report(date: dt.date, since: dt.date, tiers: dict[str, list], stats: 
         "",
     ]
     titles = {
-        "A": "Tier A — time-series specific",
-        "B": "Tier B — foundation-model auditing (check transferability)",
+        "A": "Tier A: time-series specific",
+        "B": "Tier B: pretraining-data auditing methods for foundation models (check transferability)",
     }
     for tier in ("A", "B"):
         items = tiers[tier]
@@ -172,7 +172,7 @@ def render_report(date: dt.date, since: dt.date, tiers: dict[str, list], stats: 
             continue
         for i, (e, sc) in enumerate(items, 1):
             if i > 25:  # keep the PR body readable
-                lines.append(f"- [{e.arxiv_id}]({e.url}) {e.title} — score {sc['score']}")
+                lines.append(f"- [{e.arxiv_id}]({e.url}) {e.title} (score {sc['score']})")
                 continue
             abstract = e.abstract if len(e.abstract) <= 700 else e.abstract[:700].rsplit(" ", 1)[0] + " …"
             lines += [
@@ -203,7 +203,7 @@ def fetch_source(src: str, since: dt.date, max_results: int) -> tuple[list[arxiv
                 msg = f"{type(ex).__name__}: {ex}"[:300]
                 print(f"[warn] query failed: {name}: {msg}", file=sys.stderr)
                 log.append({"name": f"api: {name}", "results": 0, "error": msg})
-                if not out:  # the API is evidently down for this run — do not burn the retry ladder 5 times
+                if not out:  # the API is evidently down for this run; do not burn the retry ladder on every query
                     break
                 continue
             newest = max((e.published for e in res), default="")
@@ -291,7 +291,7 @@ def main() -> int:
                 break
             print(f"[warn] source '{src}' returned nothing; trying the next one", file=sys.stderr)
         if fetched == 0:
-            # every source failed — do not advance the window, make the job fail visibly
+            # every source failed; do not advance the window, make the job fail visibly
             print("[error] no results from any source; see data/last_run.json / job summary for details", file=sys.stderr)
             _job_summary("arXiv watch failed", query_log)
             if not args.dry_run:

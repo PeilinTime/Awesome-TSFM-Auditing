@@ -22,7 +22,6 @@ body:
         - llm-loss-reference
         - llm-score
         - llm-dataset-level
-        - llm-benchmark-contamination
         - pitfalls
         - surveys
         - provenance

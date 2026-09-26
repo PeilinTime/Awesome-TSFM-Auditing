@@ -1,5 +1,5 @@
 # =============================================================================
-# Awesome-TSFM-Auditing — single source of truth.
+# Awesome-TSFM-Auditing: single source of truth.
 #
 # README.md is GENERATED from this file:  python scripts/build_readme.py
 # To add a paper:                          python scripts/add_paper.py <arXiv-id> --category <key>
@@ -56,7 +56,7 @@ categories:
     description: >-
       Methods that perturb the model (fine-tune it on unseen data, or on the audited set itself) and
       measure how members and non-members respond differently. They do not need token probabilities,
-      only a loss, an embedding, or a gradient — all of which every TSFM provides — so they transfer
+      only a loss, an embedding, or a gradient, all of which every TSFM provides, so they transfer
       with the fewest modifications. TSFMAudit belongs to this family.
 
   - key: llm-loss-reference
@@ -81,24 +81,15 @@ categories:
     description: >-
       Contamination in TSFMs is naturally a dataset-level question ("was this benchmark in the corpus?").
       These works aggregate weak sample-level signals into a statistically controlled decision, or test
-      performance against reference models — wrappers that can sit on top of any TS score function.
-
-  - key: llm-benchmark-contamination
-    title: "Benchmark Contamination Detection for LLM Evaluation"
-    layout: method
-    description: >-
-      Detection methods built for text benchmarks (guided completion, rephrasing, output-distribution
-      tests). Mostly prompt-based and therefore low-transfer, but included because they define the
-      contamination vocabulary (verbatim vs. rephrased, pretraining vs. post-training contamination) and
-      the evaluation-integrity arguments that carry over to TSFM benchmarks.
+      performance against reference models; both are wrappers that can sit on top of any TS score function.
 
   - key: pitfalls
     title: "Pitfalls, Critiques and Evaluations of Auditing Methods"
     layout: plain
     description: >-
-      Read these before trusting any AUC. Temporal distribution shift between members and non-members —
-      exactly the shift induced by post-release non-members — can make a blind baseline beat every
-      attack; the same caveat applies verbatim to TSFM auditing.
+      Read these before trusting any AUC. Temporal distribution shift between members and non-members
+      (exactly the shift induced by post-release non-members) can make a blind baseline beat every
+      attack; the same caveat applies to TSFM auditing.
 
   - key: surveys
     title: "Surveys"
@@ -126,7 +117,7 @@ categories:
     layout: model
     description: >-
       Auditing needs ground truth. This table records, for the mainstream TSFMs, where the pretraining
-      corpus is documented — the source for *member* datasets — and the arXiv v1 month, after which
+      corpus is documented (the source for *member* datasets) and the arXiv v1 month, after which
       newly generated observations can serve as *non-members*.
 
   - key: ts-benchmarks
@@ -308,7 +299,7 @@ papers:
     level: dataset
     access: white-box
     signal: "Kernel Divergence Score: divergence of the sample-similarity kernel before vs. after one epoch of fine-tuning on the audited dataset"
-    transfer: "Dataset-level and probability-free — needs only embeddings, available from any TSFM encoder/decoder layer"
+    transfer: "Dataset-level and probability-free: needs only embeddings, available from any TSFM encoder/decoder layer"
 
   - id: gds
     title: "From Unfamiliar to Familiar: Detecting Pre-training Data via Gradient Deviations in Large Language Models"
@@ -350,7 +341,7 @@ papers:
     level: sample
     access: grey-box
     signal: "Probabilistic variation under paraphrase, calibrated by a reference model fine-tuned on the target model's own generations"
-    transfer: "Reference model built from the target's own forecasts — a reference TSFM without extra real data"
+    transfer: "Reference model built from the target's own forecasts, i.e. a reference TSFM without extra real data"
 
   # ---------------------------------------------------------------------------
   # Loss-, reference- and gradient-based MIA (model-agnostic)
@@ -424,7 +415,7 @@ papers:
     level: sample
     access: black-box
     signal: "Gradient approximated through a local surrogate model fitted around the query; membership features learned by a modified autoencoder, unsupervised"
-    transfer: "Only predictions are needed — fits API-only TSFMs (e.g., TimeGPT) where true gradients are unavailable"
+    transfer: "Only predictions are needed, so it fits API-only TSFMs (e.g., TimeGPT) where true gradients are unavailable"
 
   - id: lbrm
     title: "A new membership inference attack that spots memorization in generative and predictive models: Loss-Based with Reference Model algorithm (LBRM)"
@@ -539,7 +530,7 @@ papers:
     level: sample
     access: grey-box
     signal: "Cross-entropy between token-probability and token-frequency distributions (calibrates for frequent tokens)"
-    transfer: "Frequency calibration needs a discrete vocabulary — Chronos-style value bins"
+    transfer: "Frequency calibration needs a discrete vocabulary such as Chronos-style value bins"
 
   - id: infilling-score
     title: "Infilling Score: A Pretraining Data Detection Algorithm for Large Language Models"
@@ -568,7 +559,7 @@ papers:
     level: sample
     access: grey-box
     signal: "Log-probability gap between the top-1 predicted token and the target token, sequentially smoothed"
-    transfer: "Gap between the modal forecast and the observed value — usable with any predictive distribution"
+    transfer: "Gap between the modal forecast and the observed value; usable with any predictive distribution"
 
   - id: samia
     title: "Sampling-based Pseudo-Likelihood for Membership Inference Attacks"
@@ -597,20 +588,6 @@ papers:
     access: grey-box
     signal: "Surprising tokens: confident predictions that turn out wrong; members surprise less"
     transfer: "Surprising steps = large residuals under a sharp predictive distribution"
-
-  - id: tag-and-tab
-    title: "Tag&Tab: Pretraining Data Detection in Large Language Models Using Keyword-Based Membership Inference Attack"
-    authors: "Sagiv Antebi, Edan Habler, Asaf Shabtai, et al."
-    year: 2025
-    venue: "Findings of EMNLP 2025"
-    arxiv: "2501.08454"
-    code: ""
-    category: llm-score
-    domain: llm
-    level: sample
-    access: grey-box
-    signal: "Log-likelihood restricted to salient keywords"
-    transfer: "Low: keyword salience has no direct time-series analogue (closest: salient extrema/change points)"
 
   - id: document-level-mia
     title: "Did the Neurons Read your Book? Document-level Membership Inference for Large Language Models"
@@ -685,20 +662,6 @@ papers:
     signal: "Conformal p-values per sample with provable false-identification-rate control"
     transfer: "Score-agnostic statistical wrapper: plug in any TS membership score"
 
-  - id: proving-test-set-contamination
-    title: "Proving Test Set Contamination in Black Box Language Models"
-    authors: "Yonatan Oren, Nicole Meister, Niladri Chatterji, et al."
-    year: 2023
-    venue: "ICLR 2024"
-    arxiv: "2310.17623"
-    code: "https://github.com/tatsu-lab/test_set_contamination"
-    category: llm-dataset-level
-    domain: llm
-    level: dataset
-    access: grey-box
-    signal: "Exchangeability test: likelihood of the canonical example ordering vs. shuffled orderings"
-    transfer: "Applies only if the model can score sequences of examples; for tokenised TSFMs with ordered corpora at best"
-
   - id: constat
     title: "ConStat: Performance-Based Contamination Detection in Large Language Models"
     authors: "Jasper Dekoninck, Mark Niklas Müller, Martin Vechev"
@@ -713,177 +676,6 @@ papers:
     signal: "Statistical test for unexplained performance on the benchmark vs. a rephrased/synthetic counterpart, relative to a set of reference models"
     transfer: "Performance-gap-vs-references design is the closest LLM relative of TSFMAudit's reference debiasing"
 
-  - id: pacost
-    title: "PaCoST: Paired Confidence Significance Testing for Benchmark Contamination Detection in Large Language Models"
-    authors: "Huixuan Zhang, Yun Lin, Xiaojun Wan"
-    year: 2024
-    venue: "Findings of EMNLP 2024"
-    arxiv: "2406.18326"
-    code: ""
-    category: llm-dataset-level
-    domain: llm
-    level: dataset
-    access: grey-box
-    signal: "Paired significance test of model confidence on original vs. rephrased benchmark items"
-    transfer: "Paired test on original vs. perturbed (rescaled/resampled) series — a natural TS analogue"
-
-  # ---------------------------------------------------------------------------
-  # Benchmark contamination detection (LLM evaluation)
-  # ---------------------------------------------------------------------------
-  - id: time-travel
-    title: "Time Travel in LLMs: Tracing Data Contamination in Large Language Models"
-    authors: "Shahriar Golchin, Mihai Surdeanu"
-    year: 2023
-    venue: "ICLR 2024"
-    arxiv: "2308.08493"
-    code: "https://github.com/shahriargolchin/time-travel-in-llms"
-    category: llm-benchmark-contamination
-    domain: llm
-    level: both
-    access: black-box
-    signal: "Guided vs. general instruction completion of partial benchmark instances"
-    transfer: "Low (prompting); the 'complete the rest of the sample' idea ≈ forecasting the held-out tail of a training series"
-
-  - id: contamination-quiz
-    title: "Data Contamination Quiz: A Tool to Detect and Estimate Contamination in Large Language Models"
-    authors: "Shahriar Golchin, Mihai Surdeanu"
-    year: 2023
-    venue: "TACL"
-    arxiv: "2311.06233"
-    code: "https://github.com/shahriargolchin/DCQ"
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "Multiple-choice quiz: pick the verbatim instance among perturbed variants"
-    transfer: "Analogue: does the model prefer the original series over rescaled/resampled variants?"
-
-  - id: ts-guessing
-    title: "Investigating Data Contamination in Modern Benchmarks for Large Language Models"
-    authors: "Chunyuan Deng, Yilun Zhao, Xiangru Tang, et al."
-    year: 2023
-    venue: "NAACL 2024"
-    arxiv: "2311.09783"
-    code: ""
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "TS-Guessing: mask a benchmark item's answer/option and ask the model to fill it in"
-    transfer: "Low; masking-and-filling is what forecasting already does"
-
-  - id: rephrased-samples
-    title: "Rethinking Benchmark and Contamination for Language Models with Rephrased Samples"
-    authors: "Shuo Yang, Wei-Lin Chiang, Lianmin Zheng, et al."
-    year: 2023
-    venue: "arXiv 2023"
-    arxiv: "2311.04850"
-    code: "https://github.com/lm-sys/llm-decontaminator"
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "Shows n-gram decontamination misses rephrased test data; proposes an embedding+LLM decontaminator"
-    transfer: "Rescaled/renamed/resampled series are the TS analogue of rephrased samples; exact matching is insufficient"
-
-  - id: cdd-ted
-    title: "Generalization or Memorization: Data Contamination and Trustworthy Evaluation for Large Language Models"
-    authors: "Yihong Dong, Xue Jiang, Huanyu Liu, et al."
-    year: 2024
-    venue: "Findings of ACL 2024"
-    arxiv: "2402.15938"
-    code: "https://github.com/YihongDong/CDD-TED4LLMs"
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "CDD: peakedness of the output distribution under sampling; TED: trustworthy evaluation by de-peaking"
-    transfer: "Sharpness of sampled forecast paths as a black-box contamination signal for probabilistic TSFMs"
-
-  - id: nlp-eval-in-trouble
-    title: "NLP Evaluation in trouble: On the Need to Measure LLM Data Contamination for each Benchmark"
-    authors: "Oscar Sainz, Jon Ander Campos, Iker García-Ferrero, et al."
-    year: 2023
-    venue: "Findings of EMNLP 2023"
-    arxiv: "2310.18018"
-    code: ""
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "Position paper: contamination must be measured per benchmark; proposes reporting practices"
-    transfer: "The reporting argument applies unchanged to TSFM leaderboards"
-
-  - id: investigating-contamination-pretraining
-    title: "Investigating Data Contamination for Pre-training Language Models"
-    authors: "Minhao Jiang, Ken Ziyu Liu, Ming Zhong, et al."
-    year: 2024
-    venue: "arXiv 2024"
-    arxiv: "2401.06059"
-    code: "https://github.com/minhaoJ2/Contamination_For_PreTraining"
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: white-box
-    signal: "Controlled pretraining with injected text/ground-truth contamination; measures its effect on downstream scores"
-    transfer: "Controlled-injection protocol is the gold standard for validating any TSFM auditor"
-
-  - id: logprober
-    title: "LogProber: Disentangling confidence from contamination in LLM responses"
-    authors: "Nicolas Yax, Pierre-Yves Oudeyer, Stefano Palminteri"
-    year: 2024
-    venue: "arXiv 2024"
-    arxiv: "2408.14352"
-    code: "https://github.com/hrl-team/LogProber"
-    category: llm-benchmark-contamination
-    domain: llm
-    level: sample
-    access: grey-box
-    signal: "Token log-probability dynamics across the question vs. the answer"
-    transfer: "Low; requires token probabilities over text prompts"
-
-  - id: contamination-icl
-    title: "Detecting Data Contamination in LLMs via In-Context Learning"
-    authors: "Michał Zawalski, Meriem Boubdir, Klaudia Bałazy, et al."
-    year: 2025
-    venue: "arXiv 2025"
-    arxiv: "2510.27055"
-    code: ""
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "Performance change when benchmark items are supplied in-context; contaminated data benefits less"
-    transfer: "In-context forecasting TSFMs (TimesFM-ICF, TiRex): contaminated series should gain less from in-context examples"
-
-  - id: contamination-rl-posttraining
-    title: "Detecting Data Contamination from Reinforcement Learning Post-training for Large Language Models"
-    authors: "Yongding Tao, Tian Wang, Yihong Dong, et al."
-    year: 2025
-    venue: "ICLR 2026"
-    arxiv: "2510.09259"
-    code: "https://github.com/yongding-tao/RL-Data-Contamination"
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "Self-Critique: entropy collapse of the policy on contaminated items"
-    transfer: "Relevant once TSFMs are post-trained/fine-tuned on benchmarks; collapse of forecast-interval entropy"
-
-  - id: contamination-resistant-benchmarks
-    title: "LLM Benchmark Datasets Should Be Contamination-Resistant"
-    authors: "Ali Al-Lawati, Jason Lucas, Dongwon Lee, et al."
-    year: 2026
-    venue: "ICML 2026 (Position)"
-    arxiv: "2605.19999"
-    code: ""
-    category: llm-benchmark-contamination
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "Position: design benchmarks to resist contamination rather than detect it afterwards"
-    transfer: "Same argument made for time series by TS-Arena / TIME / Fidel-TS"
-
   # ---------------------------------------------------------------------------
   # Pitfalls, critiques, evaluations
   # ---------------------------------------------------------------------------
@@ -896,7 +688,7 @@ papers:
     code: "https://github.com/iamgroot42/mimir"
     category: pitfalls
     domain: llm
-    note: "Large-scale study (Pythia 160M–12B, Pile domains): most attacks ≈ random; apparent success on temporally split data reflects distribution shift, not membership. MIMIR codebase"
+    note: "Large-scale study (Pythia 160M-12B, Pile domains): most attacks ≈ random; apparent success on temporally split data reflects distribution shift, not membership. MIMIR codebase"
 
   - id: blind-baselines
     title: "Blind Baselines Beat Membership Inference Attacks for Foundation Models"
@@ -907,7 +699,7 @@ papers:
     code: "https://github.com/ethz-spylab/Blind-MIA"
     category: pitfalls
     domain: llm
-    note: "Blind classifiers that never query the model beat published MIAs on 8 benchmarks because member/non-member sets differ in distribution — the exact risk of post-release non-members in TSFM auditing"
+    note: "Blind classifiers that never query the model beat published MIAs on 8 benchmarks because member/non-member sets differ in distribution, which is exactly the risk of post-release non-members in TSFM auditing"
 
   - id: sok-mia-llm
     title: "SoK: Membership Inference Attacks on LLMs are Rushing Nowhere (and How to Fix It)"
@@ -955,39 +747,6 @@ papers:
     category: surveys
     domain: llm
     note: "Contamination detection taxonomy; accompanies the LLMSanitize library"
-
-  - id: survey-benchmark-contamination
-    title: "Benchmark Data Contamination of Large Language Models: A Survey"
-    authors: "Cheng Xu, Shuhao Guan, Derek Greene, et al."
-    year: 2024
-    venue: "arXiv 2024"
-    arxiv: "2406.04244"
-    code: ""
-    category: surveys
-    domain: llm
-    note: "Benchmark contamination: sources, detection, mitigation"
-
-  - id: survey-contamination-spectrum
-    title: "Unveiling the Spectrum of Data Contamination in Language Models: A Survey from Detection to Remediation"
-    authors: "Chunyuan Deng, Yilun Zhao, Yuzhao Heng, et al."
-    year: 2024
-    venue: "Findings of ACL 2024"
-    arxiv: "2406.14644"
-    code: "https://github.com/yale-nlp/lm-contamination-survey"
-    category: surveys
-    domain: llm
-    note: "From detection to remediation; maintained paper list"
-
-  - id: survey-static-to-dynamic
-    title: "Benchmarking Large Language Models Under Data Contamination: A Survey from Static to Dynamic Evaluation"
-    authors: "Simin Chen, Yiming Chen, Zexin Li, et al."
-    year: 2025
-    venue: "arXiv 2025"
-    arxiv: "2502.17521"
-    code: "https://github.com/SeekingDream/Static-to-Dynamic-LLMEval"
-    category: surveys
-    domain: llm
-    note: "Dynamic / live evaluation as the remedy to contamination — the LLM counterpart of TS-Arena"
 
   - id: survey-mia-large-scale
     title: "Membership Inference Attacks on Large-Scale Models: A Survey"
@@ -1129,7 +888,7 @@ papers:
     domain: llm
     level: dataset
     access: white-box
-    signal: "Twelve 1.3B models pretrained with annual temporal cut-offs (2013–2024)"
+    signal: "Twelve 1.3B models pretrained with annual temporal cut-offs (2013-2024)"
     transfer: "Temporally partitioned pretraining = clean reference models with known cut-offs"
 
   - id: chronologically-consistent-llms
@@ -1187,7 +946,7 @@ papers:
     category: tsfm-models
     domain: ts
     model: "Chronos-2"
-    corpus: "Public datasets (Chronos datasets, GIFT-Eval pretrain) plus synthetic univariate/multivariate data — see paper"
+    corpus: "Public datasets (Chronos datasets, GIFT-Eval pretrain) plus synthetic univariate/multivariate data; see paper"
     corpus_url: "https://huggingface.co/datasets/autogluon/chronos_datasets"
     note: "Quantile (non-tokenised) output; in-context multivariate/covariate forecasting"
 
@@ -1243,7 +1002,7 @@ papers:
     category: tsfm-models
     domain: ts
     model: "Moirai 2.0"
-    corpus: "LOTSA-based with additional public and synthetic data — see paper"
+    corpus: "LOTSA-based with additional public and synthetic data; see paper"
     corpus_url: "https://huggingface.co/datasets/Salesforce/lotsa_data"
     note: "Decoder-only, quantile output"
 
@@ -1271,7 +1030,7 @@ papers:
     category: tsfm-models
     domain: ts
     model: "Sundial"
-    corpus: "TimeBench (~1T points) — described in the paper"
+    corpus: "TimeBench (~1T points), described in the paper"
     corpus_url: ""
     note: "Generative (flow-matching) head: sampled forecast paths"
 
@@ -1299,7 +1058,7 @@ papers:
     category: tsfm-models
     domain: ts
     model: "Timer-XL"
-    corpus: "UTSD (+ LOTSA in some configurations) — see paper"
+    corpus: "UTSD (+ LOTSA in some configurations); see paper"
     corpus_url: "https://huggingface.co/datasets/thuml/UTSD"
     note: ""
 
@@ -1355,7 +1114,7 @@ papers:
     category: tsfm-models
     domain: ts
     model: "TiRex"
-    corpus: "Chronos datasets, GIFT-Eval pretrain corpus and synthetic data — see paper"
+    corpus: "Chronos datasets, GIFT-Eval pretrain corpus and synthetic data; see paper"
     corpus_url: "https://huggingface.co/datasets/Salesforce/GiftEvalPretrain"
     note: "Quantile output; xLSTM backbone"
 
@@ -1369,7 +1128,7 @@ papers:
     category: tsfm-models
     domain: ts
     model: "Toto (+ BOOM benchmark)"
-    corpus: "Proprietary Datadog observability metrics plus GIFT-Eval pretrain, Chronos datasets and synthetic data — see paper"
+    corpus: "Proprietary Datadog observability metrics plus GIFT-Eval pretrain, Chronos datasets and synthetic data; see paper"
     corpus_url: ""
     note: "Student-t mixture output"
 
@@ -1452,7 +1211,7 @@ papers:
     code: "https://github.com/autogluon/fev"
     category: ts-benchmarks
     domain: ts
-    note: "100 tasks across 7 domains (46 with covariates) and the `fev` library with bootstrapped confidence intervals; no explicit contamination control — check overlap against the pretraining corpora above"
+    note: "100 tasks across 7 domains (46 with covariates) and the `fev` library with bootstrapped confidence intervals; no explicit contamination control; check overlap against the pretraining corpora above"
 
   - id: tsfm-bench
     title: "TSFM-Bench: A Comprehensive and Unified Benchmark of Foundation Models for Time Series Forecasting"
@@ -1463,7 +1222,7 @@ papers:
     code: "https://github.com/decisionintelligence/TSFM-Bench"
     category: ts-benchmarks
     domain: ts
-    note: "Formerly FoundTS; unified zero-/few-/full-shot evaluation of TSFMs — no explicit contamination control"
+    note: "Formerly FoundTS; unified zero-/few-/full-shot evaluation of TSFMs; no explicit contamination control"
 
   - id: tfb
     title: "TFB: Towards Comprehensive and Fair Benchmarking of Time Series Forecasting Methods"
