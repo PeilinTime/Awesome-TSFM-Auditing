@@ -26,7 +26,7 @@ A curated list of papers on **auditing the pretraining data of time series found
 
 ## Auditing Methods for Time Series Foundation Models
 
-Methods whose target is a TSFM. The list is short — this is a new problem — which is why the LLM sections below are curated for transferability.
+Methods whose target is a TSFM.
 
 | Year | Paper | Venue | Level / Access | Signal | Transfer to TSFMs | Links |
 |---|---|---|---|---|---|---|
@@ -48,7 +48,7 @@ Analyses of *direct* leakage (the same series reused across pretraining and test
 
 ## Membership Inference and Privacy for Time-Series Models
 
-Membership inference on (mostly non-foundation) time-series models. Useful for window-level attack features, sequence-level aggregation, and evaluation protocols specific to temporal data.
+Membership inference on (mostly non-foundation) time-series models. Useful for sample-level attack features, sequence-level aggregation, and evaluation protocols specific to temporal data.
 
 | Year | Paper | Venue | Level / Access | Signal | Transfer to TSFMs | Links |
 |---|---|---|---|---|---|---|
@@ -70,7 +70,7 @@ Methods that perturb the model (fine-tune it on unseen data, or on the audited s
 
 ## Loss-, Reference- and Gradient-Based Membership Inference (model-agnostic)
 
-Classic membership inference that needs only a per-sample loss (here: forecast error), optionally calibrated by shadow/reference models or by perturbed neighbours. Directly applicable to point forecasters; several are the baselines re-implemented in TSFMAudit.
+Classic membership inference that needs only a per-sample loss (here: forecast error), optionally calibrated by shadow/reference models or by perturbed neighbours. Directly applicable to point forecasters.
 
 | Year | Paper | Venue | Level / Access | Signal | Transfer to TSFMs | Links |
 |---|---|---|---|---|---|---|
@@ -85,7 +85,7 @@ Classic membership inference that needs only a per-sample loss (here: forecast e
 
 ## Token-Probability Scoring Functions (require per-step likelihoods)
 
-Scores computed from next-token probabilities (Min-K% and descendants). They require a categorical or probabilistic output head, so they transfer to tokenised TSFMs (Chronos-style) or to models with an explicit predictive distribution (Moirai, Sundial, TiRex), but not to point forecasters.
+Scores computed from next-token probabilities (Min-K% and descendants). They require a categorical or probabilistic output head, so they transfer to tokenised TSFMs (e.g. Chronos-style) or to models with an explicit predictive distribution (Moirai, Sundial, TiRex), but not to point forecasters.
 
 | Year | Paper | Venue | Level / Access | Signal | Transfer to TSFMs | Links |
 |---|---|---|---|---|---|---|
