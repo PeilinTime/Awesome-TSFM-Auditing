@@ -216,6 +216,13 @@ def parse_oai(xml_text: str) -> tuple[list[Entry], str | None]:
     return out, token
 
 
+def oai_get_record(arxiv_id: str) -> Entry | None:
+    """Fetch one record (with abstract) through OAI-PMH; works when the search API rejects the client."""
+    arxiv_id = re.sub(r"v\d+$", "", arxiv_id.strip())
+    entries, _ = parse_oai(_oai_get({"verb": "GetRecord", "metadataPrefix": "arXiv", "identifier": f"oai:arXiv.org:{arxiv_id}"}))
+    return entries[0] if entries else None
+
+
 def oai_harvest(since: str, sets: tuple[str, ...] = ("cs", "stat"), max_pages: int = 120) -> list[Entry]:
     """Harvest every record in the given arXiv sets whose datestamp is >= `since` (YYYY-MM-DD).
 

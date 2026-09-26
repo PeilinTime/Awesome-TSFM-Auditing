@@ -5,7 +5,9 @@ A curated list of papers on **auditing the pretraining data of time series found
 
 **Scope.** Time series foundation models (TSFMs) are pretrained on large, heterogeneous time series corpora. Some evaluation datasets may (partly) overlap with pretraining data, potentially inflating the reported performance and obscuring the models' generalization ability to unseen data. *TSFM auditing* aims to determine whether a given time-series sample or dataset has been seen during the target TSFM's pretraining, and to what extent. While pretraining-data auditing has been extensively studied for large language models (LLMs), many existing methods rely on token probabilities/distributions that are not readily available from TSFMs, which typically output numerical predictions without likelihoods. Moreover, the same underlying time series may reappear under different names, scales, or sampling frequencies, making contamination detection more challenging. This list collects research on pretraining-data auditing for TSFMs, along with relevant methods from the LLM/NLP and broader machine learning literature that are potentially adaptable to time series.
 
-**Legend.** *Level*: `sample` / `dataset` / `both`. *Access*: `black-box` = predictions only · `grey-box` = likelihoods or embeddings · `white-box` = gradients or fine-tuning. *Domain*: `ts` time series · `llm` language models · `ml` general ML.
+**Legend.** Each method entry carries three tags. Abstracts are folded under each title; click *Abstract* to expand.
+
+{{LEGEND}}
 
 ## 📖 Contents
 
@@ -34,3 +36,7 @@ Contributions are welcome: open a pull request that edits `papers.yaml` (not `RE
 ## ⚖️ License
 
 [CC0 1.0](LICENSE). To the extent possible under law, the maintainers have waived all copyright and related rights to this list.
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos={{REPO}}&type=Date)](https://star-history.com/#{{REPO}}&Date)

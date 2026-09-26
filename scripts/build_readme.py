@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import html
+import json
 import re
 import sys
 from pathlib import Path
@@ -19,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PAPERS = ROOT / "papers.yaml"
 TEMPLATE = ROOT / "templates" / "README.header.md"
 README = ROOT / "README.md"
+ABSTRACTS = ROOT / "data" / "abstracts.json"
 
 REQUIRED = ("id", "title", "authors", "year", "venue", "category")
 LAYOUTS = {"method", "benchmark", "plain", "model"}
@@ -57,11 +60,24 @@ def links(p: dict) -> str:
     return " · ".join(out)
 
 
+ABSTRACT_CACHE: dict = {}
+
+
+def abstract_of(p: dict) -> str:
+    """Abstract text from data/abstracts.json (keyed by arXiv id, else by entry id), or ''."""
+    rec = ABSTRACT_CACHE.get(p.get("arxiv") or "") or ABSTRACT_CACHE.get(p["id"]) or {}
+    return re.sub(r"\s+", " ", rec.get("abstract", "")).strip()
+
+
 def title_cell(p: dict, label_key: str = "title") -> str:
     url = paper_link(p)
     title = cell(p[label_key])
     head = f"[{title}]({url})" if url else title
-    return f"{head}<br><sub>{cell(p.get('authors'))}</sub>"
+    out = f"{head}<br><sub>{cell(p.get('authors'))}</sub>"
+    abstract = abstract_of(p)
+    if abstract:
+        out += f"<details><summary><sub>Abstract</sub></summary><sub>{cell(html.escape(abstract, quote=False))}</sub></details>"
+    return out
 
 
 def arxiv_month(p: dict) -> str:
@@ -72,10 +88,29 @@ def arxiv_month(p: dict) -> str:
     return str(p.get("year", ""))
 
 
-def level_access(p: dict) -> str:
-    parts = [p.get("level"), p.get("access")]
-    parts = [f"`{x}`" for x in parts if x]
-    return " ".join(parts)
+TAGS: dict = {}
+
+
+def badge(tag: str, value: str) -> str:
+    """A flat shields.io badge, coloured per papers.yaml `tags`."""
+    spec = (TAGS.get(tag) or {}).get("values", {}).get(value)
+    if not spec:
+        return f"`{value}`"
+    label = (TAGS[tag].get("label") or tag).lower()
+    enc = lambda x: x.replace("-", "--").replace("_", "__").replace(" ", "_")
+    return f"![{label}: {value}](https://img.shields.io/badge/{enc(label)}-{enc(value)}-{spec['color']}?style=flat-square)"
+
+
+def tag_badges(p: dict) -> str:
+    return " ".join(badge(t, p[t]) for t in ("level", "access", "domain") if p.get(t))
+
+
+def render_legend() -> str:
+    lines = ["| Tag | Meaning |", "|---|---|"]
+    for tag, spec in TAGS.items():
+        for value, v in spec.get("values", {}).items():
+            lines.append(f"| {badge(tag, value)} | {cell(v.get('meaning'))} |")
+    return "\n".join(lines)
 
 
 # ----------------------------------------------------------------------------- validation
@@ -106,19 +141,19 @@ def validate(data: dict) -> list[str]:
             errors.append(f"{pid}: needs either 'arxiv' or 'url'")
         if p.get("category") not in cats:
             errors.append(f"{pid}: unknown category '{p.get('category')}'")
-        if p.get("level") and p["level"] not in {"sample", "dataset", "both"}:
-            errors.append(f"{pid}: level must be sample|dataset|both")
-        if p.get("access") and p["access"] not in {"black-box", "grey-box", "white-box"}:
-            errors.append(f"{pid}: access must be black-box|grey-box|white-box")
+        for tag in ("level", "access", "domain"):
+            allowed = set((data.get("tags", {}).get(tag) or {}).get("values", {}))
+            if p.get(tag) and allowed and p[tag] not in allowed:
+                errors.append(f"{pid}: {tag} must be one of {sorted(allowed)} (declare new values under `tags:` first)")
     return errors
 
 
 # ----------------------------------------------------------------------------- rendering
 def render_table(layout: str, papers: list[dict]) -> str:
     if layout == "method":
-        header = "| Year | Paper | Venue | Level / Access | Signal | Transfer to TSFMs | Links |\n|---|---|---|---|---|---|---|"
+        header = "| Year | Paper | Venue | Tags | Signal | Transfer to TSFMs | Links |\n|---|---|---|---|---|---|---|"
         rows = [
-            f"| {p['year']} | {title_cell(p)} | {cell(p['venue'])} | {level_access(p)} | "
+            f"| {p['year']} | {title_cell(p)} | {cell(p['venue'])} | {tag_badges(p)} | "
             f"{cell(p.get('signal'))} | {cell(p.get('transfer') or p.get('note'))} | {links(p)} |"
             for p in papers
         ]
@@ -145,6 +180,9 @@ def render_table(layout: str, papers: list[dict]) -> str:
 
 
 def build(data: dict) -> str:
+    global TAGS, ABSTRACT_CACHE
+    TAGS = data.get("tags") or {}
+    ABSTRACT_CACHE = json.loads(ABSTRACTS.read_text(encoding="utf-8")) if ABSTRACTS.exists() else {}
     cats = data["categories"]
     papers = data["papers"]
     by_cat: dict[str, list[dict]] = {c["key"]: [] for c in cats}
@@ -172,6 +210,7 @@ def build(data: dict) -> str:
     template = TEMPLATE.read_text(encoding="utf-8")
     out = (
         template.replace("{{TOC}}", "\n".join(toc_lines))
+        .replace("{{LEGEND}}", render_legend())
         .replace("{{SECTIONS}}", "\n".join(sections).rstrip() + "\n")
         .replace("{{N_PAPERS}}", str(len(papers)))
         .replace("{{DATE}}", dt.date.today().isoformat())

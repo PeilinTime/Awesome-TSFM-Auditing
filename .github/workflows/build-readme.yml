@@ -7,6 +7,7 @@ on:
       - "papers.yaml"
       - "templates/**"
       - "scripts/build_readme.py"
+      - "data/abstracts.json"
   pull_request:
     paths:
       - "papers.yaml"

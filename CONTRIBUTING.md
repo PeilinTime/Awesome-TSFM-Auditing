@@ -21,6 +21,8 @@ python scripts/add_paper.py <arXiv-id> --category <category-key>   # fetches met
 python scripts/build_readme.py                                      # validates and regenerates README.md
 ```
 
+`add_paper.py` also stores the abstract in `data/abstracts.json`, which README.md folds under the title; for a paper without an arXiv version add the abstract there by hand, keyed by the entry id. The *Fetch abstracts* workflow (Actions tab) fills in any that are missing.
+
 Open a pull request with the change to `papers.yaml` (and the regenerated `README.md` if you ran the script; CI regenerates it on merge either way). If you prefer not to clone, open an issue with the *Add a paper* template.
 
 ### Category keys

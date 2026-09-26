@@ -11,6 +11,7 @@ and prints it so you can fill in the remaining fields. Run scripts/build_readme.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -22,6 +23,7 @@ import arxiv_api  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPERS = ROOT / "papers.yaml"
+ABSTRACTS = ROOT / "data" / "abstracts.json"
 
 
 def slugify(title: str, arxiv_id: str) -> str:
@@ -110,6 +112,13 @@ def main() -> int:
     if not text.endswith("\n"):
         text += "\n"
     PAPERS.write_text(text + block, encoding="utf-8")
+
+    # keep the abstract so README.md can fold it under the title
+    if e.abstract:
+        store = json.loads(ABSTRACTS.read_text(encoding="utf-8")) if ABSTRACTS.exists() else {}
+        store[arxiv_id] = {"title": e.title, "abstract": e.abstract, "source": "api"}
+        ABSTRACTS.parent.mkdir(exist_ok=True)
+        ABSTRACTS.write_text(json.dumps(store, indent=1, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
     print(block)
     print(f"Appended to {PAPERS.relative_to(ROOT)}. Fill in the empty fields, then run: python scripts/build_readme.py")
     return 0
