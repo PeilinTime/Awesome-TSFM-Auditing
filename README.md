@@ -194,8 +194,6 @@ Widely used evaluation suites, with a note on how (or whether) each handles pret
 | 2021 | [Monash Time Series Forecasting Archive](https://arxiv.org/abs/2105.06643)<br><sub>Rakshitha Godahewa, Christoph Bergmeir, Geoffrey I. Webb, et al.</sub> | NeurIPS 2021 (Datasets and Benchmarks) | The most reused archive in TSFM pretraining; several datasets exist in rescaled/renamed copies (e.g., Elecdemand) | [arXiv](https://arxiv.org/abs/2105.06643) · [Code](https://forecastingdata.org/) |
 
 
-<<<<<<< Updated upstream
-=======
 
 ## Related Lists
 
@@ -203,7 +201,6 @@ Benchmark contamination detection for LLM evaluation is outside the scope of thi
 
 - [lyy1994/awesome-data-contamination](https://github.com/lyy1994/awesome-data-contamination): data contamination in LLM evaluation
 - [yale-nlp/lm-contamination-survey](https://github.com/yale-nlp/lm-contamination-survey): paper list accompanying the ACL 2024 survey
->>>>>>> Stashed changes
 
 Membership inference on language models:
 

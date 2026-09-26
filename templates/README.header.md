@@ -13,8 +13,6 @@ A curated list of papers on **auditing the pretraining data of time series found
 
 {{SECTIONS}}
 
-<<<<<<< Updated upstream
-=======
 
 ## Related Lists
 
@@ -22,7 +20,6 @@ Benchmark contamination detection for LLM evaluation is outside the scope of thi
 
 - [lyy1994/awesome-data-contamination](https://github.com/lyy1994/awesome-data-contamination): data contamination in LLM evaluation
 - [yale-nlp/lm-contamination-survey](https://github.com/yale-nlp/lm-contamination-survey): paper list accompanying the ACL 2024 survey
->>>>>>> Stashed changes
 
 Membership inference on language models:
 
