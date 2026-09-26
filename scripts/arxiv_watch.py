@@ -75,6 +75,8 @@ TS_TERMS = ["time series", "time-series", "forecasting", "forecaster", "temporal
 FM_TERMS = ["foundation model", "language model", "llm", "pretrained", "pre-trained", "pretraining", "pre-training"]
 AUDIT_TERMS = {
     "membership inference": 3, "pretraining data detection": 3, "pre-training data detection": 3,
+    "detecting pretraining data": 3, "detecting pre-training data": 3, "detect pretraining data": 3, "detect pre-training data": 3,
+    "training data identification": 3,
     "training data detection": 3, "dataset inference": 3, "data contamination": 3, "benchmark contamination": 3,
     "test set contamination": 3, "pretraining data": 2, "pre-training data": 2, "contamination": 2,
     "information leakage": 2, "data leakage": 2, "leakage-free": 2, "leakage": 1,
@@ -88,7 +90,8 @@ WEAK_TERMS = {"contamination", "leakage", "audit", "auditing", "provenance"}
 # LLM evaluation (prompt-based tests) is out of scope and is deliberately not matched here.
 STRONG_FOR_TIER_B = {
     "membership inference", "pretraining data detection", "pre-training data detection", "training data detection",
-    "dataset inference", "pretraining data", "pre-training data",
+    "detecting pretraining data", "detecting pre-training data", "detect pretraining data", "detect pre-training data",
+    "training data identification", "dataset inference",
 }
 
 
