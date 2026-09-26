@@ -160,9 +160,10 @@ def build(data: dict) -> str:
         ps = sorted(by_cat[c["key"]], key=sort_key)
         if not ps:
             continue
-        anchor = github_slug(c["title"])
-        toc_lines.append(f"- [{c['title']}](#{anchor}) ({len(ps)})")
-        block = [f"## {c['title']}", ""]
+        heading = f"{c['emoji']} {c['title']}" if c.get("emoji") else c["title"]
+        # explicit anchor (the category key) so links do not depend on how GitHub slugs emoji headings
+        toc_lines.append(f"- [{heading}](#{c['key']}) ({len(ps)})")
+        block = [f'<a id="{c["key"]}"></a>', f"## {heading}", ""]
         if c.get("description"):
             block += [c["description"].strip(), ""]
         block += [render_table(c.get("layout", "method"), ps), ""]

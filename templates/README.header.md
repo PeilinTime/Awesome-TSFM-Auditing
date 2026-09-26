@@ -7,14 +7,14 @@ A curated list of papers on **auditing the pretraining data of time series found
 
 **Legend.** *Level*: `sample` / `dataset` / `both`. *Access*: `black-box` = predictions only · `grey-box` = likelihoods or embeddings · `white-box` = gradients or fine-tuning. *Domain*: `ts` time series · `llm` language models · `ml` general ML.
 
-## Contents
+## 📖 Contents
 
 {{TOC}}
 
 {{SECTIONS}}
 
 
-## Related Lists
+## 🔗 Related Lists
 
 Benchmark contamination detection for LLM evaluation is outside the scope of this list; for that topic see:
 
@@ -27,10 +27,10 @@ Membership inference on language models:
 - [velvinnn/LLM_MIA](https://github.com/velvinnn/LLM_MIA): case studies for *Does Data Contamination Detection Work (Well) for LLMs?*
 - [CryptoAILab/Awesome-LM-SSP](https://github.com/CryptoAILab/Awesome-LM-SSP): safety, security and privacy of large models (has a membership-inference section)
 
-## Contributing
+## ✍️ Contributing
 
 Contributions are welcome: open a pull request that edits `papers.yaml` (not `README.md`), or open an issue using the *Add a paper* template. Inclusion criteria: the paper audits, attacks, or evaluates the pretraining/training data of a time-series model, **or** it is an LLM / general-ML auditing method whose signal is available from a TSFM (loss, likelihood, embeddings, gradients, fine-tuning) with little modification. Please state the transfer argument in the `transfer` field.
 
-## License
+## ⚖️ License
 
 [CC0 1.0](LICENSE). To the extent possible under law, the maintainers have waived all copyright and related rights to this list.

@@ -7,22 +7,23 @@ A curated list of papers on **auditing the pretraining data of time series found
 
 **Legend.** *Level*: `sample` / `dataset` / `both`. *Access*: `black-box` = predictions only · `grey-box` = likelihoods or embeddings · `white-box` = gradients or fine-tuning. *Domain*: `ts` time series · `llm` language models · `ml` general ML.
 
-## Contents
+## 📖 Contents
 
-- [Auditing Methods for Time Series Foundation Models](#auditing-methods-for-time-series-foundation-models) (1)
-- [Information Leakage and Leakage-Aware Evaluation of TSFMs](#information-leakage-and-leakage-aware-evaluation-of-tsfms) (7)
-- [Membership Inference and Privacy for Time-Series Models](#membership-inference-and-privacy-for-time-series-models) (3)
-- [Fine-Tuning and Adaptation-Dynamics-Based Detection (most transferable)](#fine-tuning-and-adaptation-dynamics-based-detection-most-transferable) (5)
-- [Loss-, Reference- and Gradient-Based Membership Inference (model-agnostic)](#loss--reference--and-gradient-based-membership-inference-model-agnostic) (8)
-- [Token-Probability Scoring Functions (require per-step likelihoods)](#token-probability-scoring-functions-require-per-step-likelihoods) (10)
-- [Dataset-Level Inference and Statistical Contamination Tests](#dataset-level-inference-and-statistical-contamination-tests) (5)
-- [Pitfalls, Critiques and Evaluations of Auditing Methods](#pitfalls-critiques-and-evaluations-of-auditing-methods) (5)
-- [Surveys](#surveys) (2)
-- [Proactive Provenance: Data Watermarks and Copyright Traps](#proactive-provenance-data-watermarks-and-copyright-traps) (5)
-- [Target Models and Their Documented Pretraining Corpora](#target-models-and-their-documented-pretraining-corpora) (19)
-- [Benchmarks and Evaluation Suites](#benchmarks-and-evaluation-suites) (5)
+- [🕵️ Auditing Methods for Time Series Foundation Models](#tsfm-auditing) (1)
+- [💧 Information Leakage and Leakage-Aware Evaluation of TSFMs](#tsfm-leakage-eval) (7)
+- [🔐 Membership Inference and Privacy for Time-Series Models](#ts-mia) (3)
+- [🎛️ Fine-Tuning and Adaptation-Dynamics-Based Detection (most transferable)](#llm-finetune) (5)
+- [📉 Loss-, Reference- and Gradient-Based Membership Inference (model-agnostic)](#llm-loss-reference) (8)
+- [🎲 Token-Probability Scoring Functions (require per-step likelihoods)](#llm-score) (10)
+- [🧮 Dataset-Level Inference and Statistical Contamination Tests](#llm-dataset-level) (5)
+- [⚠️ Pitfalls, Critiques and Evaluations of Auditing Methods](#pitfalls) (5)
+- [📚 Surveys](#surveys) (2)
+- [🔏 Proactive Provenance: Data Watermarks and Copyright Traps](#provenance) (5)
+- [🤖 Target Models and Their Documented Pretraining Corpora](#tsfm-models) (19)
+- [📏 Benchmarks and Evaluation Suites](#ts-benchmarks) (5)
 
-## Auditing Methods for Time Series Foundation Models
+<a id="tsfm-auditing"></a>
+## 🕵️ Auditing Methods for Time Series Foundation Models
 
 Methods whose target is a TSFM.
 
@@ -30,7 +31,8 @@ Methods whose target is a TSFM.
 |---|---|---|---|---|---|---|
 | 2026 | [TSFMAudit: Data Contamination Auditing in Forecasting Time Series Foundation Models](https://arxiv.org/abs/2605.26161)<br><sub>Hongkai Li, Shifeng Xie, Lefei Shen, et al.</sub> | arXiv 2026 | `dataset` `white-box` | Probe-time adaptation dynamics (loss drop, parameter displacement, adaptation efficiency), debiased against reference models | First dataset-level contamination audit for forecasting TSFMs; 6 TSFMs, 187 datasets; compares against 10 baselines adapted from the LLM literature (raw loss, LiRA ratio, TS Min-K FFT) | [arXiv](https://arxiv.org/abs/2605.26161) · [Code](https://github.com/kkevin117/TSFMAudit) |
 
-## Information Leakage and Leakage-Aware Evaluation of TSFMs
+<a id="tsfm-leakage-eval"></a>
+## 💧 Information Leakage and Leakage-Aware Evaluation of TSFMs
 
 Analyses of *direct* leakage (the same series reused across pretraining and test sets, often after rescaling, renaming, or resampling) and *indirect* leakage (temporal overlap between correlated series), plus benchmarks and protocols designed to avoid them. These works also define how reliable non-members can be built: observations generated after a model's release.
 
@@ -44,7 +46,8 @@ Analyses of *direct* leakage (the same series reused across pretraining and test
 | 2025 | [How Foundational are Foundation Models for Time Series Forecasting?](https://arxiv.org/abs/2510.00742)<br><sub>Nouha Karaouli, Denis Coquenet, Elisa Fromont, et al.</sub> | NeurIPS 2025 Workshop (BERT2S) | Evaluates TSFMs on proprietary series guaranteed to be unseen; zero-shot advantage depends on alignment with the pretraining domain | [arXiv](https://arxiv.org/abs/2510.00742) |
 | 2025 | [Fidel-TS: A High-Fidelity Benchmark for Multimodal Time Series Forecasting](https://arxiv.org/abs/2509.24789)<br><sub>Zhijian Xu, Wanxu Cai, Xilin Dai, et al.</sub> | arXiv 2025 | Documents pretraining contamination and temporal/description leakage in existing multimodal TS benchmarks; rebuilds a leak-free benchmark from real-time APIs | [arXiv](https://arxiv.org/abs/2509.24789) |
 
-## Membership Inference and Privacy for Time-Series Models
+<a id="ts-mia"></a>
+## 🔐 Membership Inference and Privacy for Time-Series Models
 
 Membership inference on (mostly non-foundation) time-series models. Useful for sample-level attack features, sequence-level aggregation, and evaluation protocols specific to temporal data.
 
@@ -54,7 +57,8 @@ Membership inference on (mostly non-foundation) time-series models. Useful for s
 | 2025 | [Membership Inference Attacks on Sequence Models](https://arxiv.org/abs/2506.05126)<br><sub>Lorenzo Rossi, Michael Aerni, Jie Zhang, et al.</sub> | arXiv 2025 | `sample` `grey-box` | MIA for autoregressive sequence models (LLMs, image generators) that models within-sequence correlations instead of treating steps independently | Autoregressive TSFMs generate forecasts step by step; the same correlation-aware aggregation applies | [arXiv](https://arxiv.org/abs/2506.05126) |
 | 2024 | [Membership Inference Attacks Against Time-Series Models](https://arxiv.org/abs/2407.02870)<br><sub>Noam Koren, Abigail Goldsteen, Guy Amit, et al.</sub> | ACML 2024 | `sample` `black-box` | Attack features built from temporal structure: seasonality via a multivariate Fourier transform and trend via low-degree polynomial fits (medical time series) | Window-level attack features for forecasters; a starting point for sample-level TSFM audits | [arXiv](https://arxiv.org/abs/2407.02870) |
 
-## Fine-Tuning and Adaptation-Dynamics-Based Detection (most transferable)
+<a id="llm-finetune"></a>
+## 🎛️ Fine-Tuning and Adaptation-Dynamics-Based Detection (most transferable)
 
 Methods that perturb the model (fine-tune it on unseen data, or on the audited set itself) and measure how members and non-members respond differently. They do not need token probabilities, only a loss, an embedding, or a gradient, all of which every TSFM provides, so they transfer with the fewest modifications. TSFMAudit belongs to this family.
 
@@ -66,7 +70,8 @@ Methods that perturb the model (fine-tune it on unseen data, or on the audited s
 | 2023 | [Practical Membership Inference Attacks against Fine-tuned Large Language Models via Self-prompt Calibration](https://arxiv.org/abs/2311.06062)<br><sub>Wenjie Fu, Huandong Wang, Chen Gao, et al.</sub> | NeurIPS 2024 | `sample` `grey-box` | Probabilistic variation under paraphrase, calibrated by a reference model fine-tuned on the target model's own generations | Reference model built from the target's own forecasts, i.e. a reference TSFM without extra real data | [arXiv](https://arxiv.org/abs/2311.06062) · [Code](https://github.com/tsinghua-fib-lab/NeurIPS2024_SPV-MIA) |
 | 2022 | [Membership Inference Attacks by Exploiting Loss Trajectory](https://arxiv.org/abs/2208.14933)<br><sub>Yiyong Liu, Zhengyu Zhao, Michael Backes, et al.</sub> | ACM CCS 2022 | `sample` `black-box` | Loss trajectory across intermediate models obtained by knowledge distillation (stand-in for training checkpoints) | Trajectory-based signal; distillation replaces unavailable TSFM pretraining checkpoints | [arXiv](https://arxiv.org/abs/2208.14933) · [Code](https://github.com/DennisLiu2022/Membership-Inference-Attacks-by-Exploiting-Loss-Trajectory) |
 
-## Loss-, Reference- and Gradient-Based Membership Inference (model-agnostic)
+<a id="llm-loss-reference"></a>
+## 📉 Loss-, Reference- and Gradient-Based Membership Inference (model-agnostic)
 
 Classic membership inference that needs only a per-sample loss (here: forecast error), optionally calibrated by shadow/reference models or by perturbed neighbours. Directly applicable to point forecasters.
 
@@ -81,7 +86,8 @@ Classic membership inference that needs only a per-sample loss (here: forecast e
 | 2017 | [Privacy Risk in Machine Learning: Analyzing the Connection to Overfitting](https://arxiv.org/abs/1709.01604)<br><sub>Samuel Yeom, Irene Giacomelli, Matt Fredrikson, et al.</sub> | IEEE CSF 2018 | `sample` `black-box` | Per-sample loss below a threshold | The 'Raw Loss' baseline: zero-shot forecast error thresholding | [arXiv](https://arxiv.org/abs/1709.01604) |
 | 2016 | [Membership Inference Attacks against Machine Learning Models](https://arxiv.org/abs/1610.05820)<br><sub>Reza Shokri, Marco Stronati, Congzheng Song, et al.</sub> | IEEE S&P 2017 | `sample` `black-box` | Shadow models trained on known members/non-members supervise an attack classifier | Feasible only with small shadow TSFMs; motivates reference-model designs instead | [arXiv](https://arxiv.org/abs/1610.05820) |
 
-## Token-Probability Scoring Functions (require per-step likelihoods)
+<a id="llm-score"></a>
+## 🎲 Token-Probability Scoring Functions (require per-step likelihoods)
 
 Scores computed from next-token probabilities (Min-K% and descendants). They require a categorical or probabilistic output head, so they transfer to tokenised TSFMs (e.g. Chronos-style) or to models with an explicit predictive distribution (Moirai, Sundial, TiRex), but not to point forecasters.
 
@@ -98,7 +104,8 @@ Scores computed from next-token probabilities (Min-K% and descendants). They req
 | 2023 | [Detecting Pretraining Data from Large Language Models](https://arxiv.org/abs/2310.16789)<br><sub>Weijia Shi, Anirudh Ajith, Mengzhou Xia, et al.</sub> | ICLR 2024 | `sample` `grey-box` | Min-K% Prob: mean log-probability of the k% least likely tokens; introduces the WikiMIA benchmark | Needs per-step likelihoods: tokenised (Chronos) or distributional heads; TSFMAudit's 'TS Min-K FFT' applies the idea to residual spectra | [arXiv](https://arxiv.org/abs/2310.16789) · [Code](https://github.com/swj0419/detect-pretrain-code) |
 | 2023 | [Did the Neurons Read your Book? Document-level Membership Inference for Large Language Models](https://arxiv.org/abs/2310.15007)<br><sub>Matthieu Meeus, Shubham Jain, Marek Rei, et al.</sub> | USENIX Security 2024 | `dataset` `grey-box` | Token-level features aggregated into document-level histograms fed to a meta-classifier | Template for aggregating window-level scores to series- or dataset-level decisions | [arXiv](https://arxiv.org/abs/2310.15007) |
 
-## Dataset-Level Inference and Statistical Contamination Tests
+<a id="llm-dataset-level"></a>
+## 🧮 Dataset-Level Inference and Statistical Contamination Tests
 
 Contamination in TSFMs is naturally a dataset-level question ("was this benchmark in the corpus?"). These works aggregate weak sample-level signals into a statistically controlled decision, or test performance against reference models; both are wrappers that can sit on top of any TS score function.
 
@@ -110,7 +117,8 @@ Contamination in TSFMs is naturally a dataset-level question ("was this benchmar
 | 2024 | [ConStat: Performance-Based Contamination Detection in Large Language Models](https://arxiv.org/abs/2405.16281)<br><sub>Jasper Dekoninck, Mark Niklas Müller, Martin Vechev</sub> | NeurIPS 2024 | `dataset` `black-box` | Statistical test for unexplained performance on the benchmark vs. a rephrased/synthetic counterpart, relative to a set of reference models | Performance-gap-vs-references design is the closest LLM relative of TSFMAudit's reference debiasing | [arXiv](https://arxiv.org/abs/2405.16281) · [Code](https://github.com/eth-sri/ConStat) |
 | 2021 | [Dataset Inference: Ownership Resolution in Machine Learning](https://arxiv.org/abs/2104.10706)<br><sub>Pratyush Maini, Mohammad Yaghini, Nicolas Papernot</sub> | ICLR 2021 | `dataset` `black-box` | Prediction-margin (distance-to-boundary) signatures of training data, tested at dataset level | Ownership-resolution framing; margin analogue = forecast-interval calibration | [arXiv](https://arxiv.org/abs/2104.10706) · [Code](https://github.com/cleverhans-lab/dataset-inference) |
 
-## Pitfalls, Critiques and Evaluations of Auditing Methods
+<a id="pitfalls"></a>
+## ⚠️ Pitfalls, Critiques and Evaluations of Auditing Methods
 
 Read these before trusting any AUC. Temporal distribution shift between members and non-members (exactly the shift induced by post-release non-members) can make a blind baseline beat every attack; the same caveat applies to TSFM auditing.
 
@@ -122,14 +130,16 @@ Read these before trusting any AUC. Temporal distribution shift between members 
 | 2024 | [Blind Baselines Beat Membership Inference Attacks for Foundation Models](https://arxiv.org/abs/2406.16201)<br><sub>Debeshee Das, Jie Zhang, Florian Tramèr</sub> | ICLR 2025 Workshop (DATA-FM); IEEE DLSP 2025 | Blind classifiers that never query the model beat published MIAs on 8 benchmarks because member/non-member sets differ in distribution, which is exactly the risk of post-release non-members in TSFM auditing | [arXiv](https://arxiv.org/abs/2406.16201) · [Code](https://github.com/ethz-spylab/Blind-MIA) |
 | 2024 | [Do Membership Inference Attacks Work on Large Language Models?](https://arxiv.org/abs/2402.07841)<br><sub>Michael Duan, Anshuman Suri, Niloofar Mireshghallah, et al.</sub> | COLM 2024 | Large-scale study (Pythia 160M–12B, Pile domains): most attacks ≈ random; apparent success on temporally split data reflects distribution shift, not membership. MIMIR codebase | [arXiv](https://arxiv.org/abs/2402.07841) · [Code](https://github.com/iamgroot42/mimir) |
 
-## Surveys
+<a id="surveys"></a>
+## 📚 Surveys
 
 | Year | Paper | Venue | Takeaway | Links |
 |---|---|---|---|---|
 | 2025 | [Membership Inference Attacks on Large-Scale Models: A Survey](https://arxiv.org/abs/2503.19338)<br><sub>Hengyu Wu, Yang Cao</sub> | arXiv 2025 | MIA across LLMs and large multimodal models | [arXiv](https://arxiv.org/abs/2503.19338) |
 | 2024 | [A Comprehensive Survey of Contamination Detection Methods in Large Language Models](https://arxiv.org/abs/2404.00699)<br><sub>Mathieu Ravaut, Bosheng Ding, Fangkai Jiao, et al.</sub> | TMLR 2025 | Contamination detection taxonomy; accompanies the LLMSanitize library | [arXiv](https://arxiv.org/abs/2404.00699) |
 
-## Proactive Provenance: Data Watermarks and Copyright Traps
+<a id="provenance"></a>
+## 🔏 Proactive Provenance: Data Watermarks and Copyright Traps
 
 Instead of detecting membership after the fact, plant a detectable signal in the data before release. Time-series watermarking exists for generated data; watermarking public forecasting datasets to later prove pretraining use is an open direction.
 
@@ -141,7 +151,8 @@ Instead of detecting membership after the fact, plant a detectable signal in the
 | 2024 | [DE-COP: Detecting Copyrighted Content in Language Models Training Data](https://arxiv.org/abs/2402.09910)<br><sub>André V. Duarte, Xuandong Zhao, Arlindo L. Oliveira, et al.</sub> | ICML 2024 | `dataset` `black-box` | Multiple-choice probing: verbatim passage vs. paraphrases | Black-box; the verbatim-vs-perturbed preference test is reusable for series | [arXiv](https://arxiv.org/abs/2402.09910) · [Code](https://github.com/avduarte333/DE-COP_Method) |
 | 2024 | [Copyright Traps for Large Language Models](https://arxiv.org/abs/2402.09363)<br><sub>Matthieu Meeus, Igor Shilov, Manuel Faysse, et al.</sub> | ICML 2024 | `dataset` `grey-box` | Synthetic trap sequences repeated in a document; detectability grows with repetition and perplexity | Trap series inserted into a released dataset; detectable via forecast loss on the trap | [arXiv](https://arxiv.org/abs/2402.09363) |
 
-## Target Models and Their Documented Pretraining Corpora
+<a id="tsfm-models"></a>
+## 🤖 Target Models and Their Documented Pretraining Corpora
 
 Auditing needs ground truth. This table records, for the mainstream TSFMs, where the pretraining corpus is documented (the source for *member* datasets) and the arXiv v1 month, after which newly generated observations can serve as *non-members*.
 
@@ -167,7 +178,8 @@ Auditing needs ground truth. This table records, for the mainstream TSFMs, where
 | 2023-10 | **Lag-Llama** | [Lag-Llama: Towards Foundation Models for Probabilistic Time Series Forecasting](https://arxiv.org/abs/2310.08278)<br><sub>Kashif Rasul, Arjun Ashok, Andrew Robert Williams, et al.</sub> | arXiv 2023 | 27 public datasets (Monash and others) listed in the paper | Student-t output distribution | [arXiv](https://arxiv.org/abs/2310.08278) · [Code](https://github.com/time-series-foundation-models/lag-llama) |
 | 2023-10 | **TimeGPT** | [TimeGPT-1](https://arxiv.org/abs/2310.03589)<br><sub>Azul Garza, Cristian Challu, Max Mergenthaler-Canseco</sub> | arXiv 2023 | Proprietary (~100B points), undocumented | API-only: black-box auditing methods only | [arXiv](https://arxiv.org/abs/2310.03589) · [Code](https://github.com/Nixtla/nixtla) |
 
-## Benchmarks and Evaluation Suites
+<a id="ts-benchmarks"></a>
+## 📏 Benchmarks and Evaluation Suites
 
 Widely used evaluation suites, with a note on how (or whether) each handles pretraining overlap.
 
@@ -181,7 +193,7 @@ Widely used evaluation suites, with a note on how (or whether) each handles pret
 
 
 
-## Related Lists
+## 🔗 Related Lists
 
 Benchmark contamination detection for LLM evaluation is outside the scope of this list; for that topic see:
 
@@ -194,10 +206,10 @@ Membership inference on language models:
 - [velvinnn/LLM_MIA](https://github.com/velvinnn/LLM_MIA): case studies for *Does Data Contamination Detection Work (Well) for LLMs?*
 - [CryptoAILab/Awesome-LM-SSP](https://github.com/CryptoAILab/Awesome-LM-SSP): safety, security and privacy of large models (has a membership-inference section)
 
-## Contributing
+## ✍️ Contributing
 
 Contributions are welcome: open a pull request that edits `papers.yaml` (not `README.md`), or open an issue using the *Add a paper* template. Inclusion criteria: the paper audits, attacks, or evaluates the pretraining/training data of a time-series model, **or** it is an LLM / general-ML auditing method whose signal is available from a TSFM (loss, likelihood, embeddings, gradients, fine-tuning) with little modification. Please state the transfer argument in the `transfer` field.
 
-## License
+## ⚖️ License
 
 [CC0 1.0](LICENSE). To the extent possible under law, the maintainers have waived all copyright and related rights to this list.

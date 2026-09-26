@@ -27,14 +27,16 @@
 
 repo: PeilinTime/Awesome-TSFM-Auditing
 
-categories:
+categories:   # emoji: shown in front of the section heading and in the table of contents
   - key: tsfm-auditing
+    emoji: "🕵️"
     title: "Auditing Methods for Time Series Foundation Models"
     layout: method
     description: >-
       Methods whose target is a TSFM.
 
   - key: tsfm-leakage-eval
+    emoji: "💧"
     title: "Information Leakage and Leakage-Aware Evaluation of TSFMs"
     layout: benchmark
     description: >-
@@ -44,6 +46,7 @@ categories:
       reliable non-members can be built: observations generated after a model's release.
 
   - key: ts-mia
+    emoji: "🔐"
     title: "Membership Inference and Privacy for Time-Series Models"
     layout: method
     description: >-
@@ -51,6 +54,7 @@ categories:
       features, sequence-level aggregation, and evaluation protocols specific to temporal data.
 
   - key: llm-finetune
+    emoji: "🎛️"
     title: "Fine-Tuning and Adaptation-Dynamics-Based Detection (most transferable)"
     layout: method
     description: >-
@@ -60,6 +64,7 @@ categories:
       with the fewest modifications. TSFMAudit belongs to this family.
 
   - key: llm-loss-reference
+    emoji: "📉"
     title: "Loss-, Reference- and Gradient-Based Membership Inference (model-agnostic)"
     layout: method
     description: >-
@@ -68,6 +73,7 @@ categories:
       forecasters.
 
   - key: llm-score
+    emoji: "🎲"
     title: "Token-Probability Scoring Functions (require per-step likelihoods)"
     layout: method
     description: >-
@@ -76,6 +82,7 @@ categories:
       an explicit predictive distribution (Moirai, Sundial, TiRex), but not to point forecasters.
 
   - key: llm-dataset-level
+    emoji: "🧮"
     title: "Dataset-Level Inference and Statistical Contamination Tests"
     layout: method
     description: >-
@@ -84,6 +91,7 @@ categories:
       performance against reference models; both are wrappers that can sit on top of any TS score function.
 
   - key: pitfalls
+    emoji: "⚠️"
     title: "Pitfalls, Critiques and Evaluations of Auditing Methods"
     layout: plain
     description: >-
@@ -92,11 +100,13 @@ categories:
       attack; the same caveat applies to TSFM auditing.
 
   - key: surveys
+    emoji: "📚"
     title: "Surveys"
     layout: plain
     description: ""
 
   - key: provenance
+    emoji: "🔏"
     title: "Proactive Provenance: Data Watermarks and Copyright Traps"
     layout: method
     description: >-
@@ -105,6 +115,7 @@ categories:
       datasets to later prove pretraining use is an open direction.
 
   - key: tsfm-models
+    emoji: "🤖"
     title: "Target Models and Their Documented Pretraining Corpora"
     layout: model
     description: >-
@@ -113,6 +124,7 @@ categories:
       newly generated observations can serve as *non-members*.
 
   - key: ts-benchmarks
+    emoji: "📏"
     title: "Benchmarks and Evaluation Suites"
     layout: benchmark
     description: >-
