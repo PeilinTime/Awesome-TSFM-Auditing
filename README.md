@@ -1,31 +1,9 @@
 <!-- THIS FILE IS GENERATED from papers.yaml by scripts/build_readme.py — edit papers.yaml, not README.md -->
 # Awesome TSFM Auditing [![Awesome](https://awesome.re/badge.svg)](https://awesome.re) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![arXiv watch](https://github.com/PeilinTime/Awesome-TSFM-Auditing/actions/workflows/arxiv-watch.yml/badge.svg)](https://github.com/PeilinTime/Awesome-TSFM-Auditing/actions/workflows/arxiv-watch.yml) ![papers](https://img.shields.io/badge/papers-98-blue) ![updated](https://img.shields.io/badge/updated-2026-09-26-lightgrey)
 
-A curated list of papers on **auditing the pretraining data of time series foundation models (TSFMs)**: pretraining-data / contamination auditing, membership inference, information leakage in TSFM evaluation, and the LLM-side methods that transfer to time series with the fewest modifications.
+A curated list of papers on **auditing the pretraining data of time series foundation models (TSFMs)**: pretraining-data / contamination auditing, membership inference, information leakage in TSFM evaluation, and relevant methods from the LLM/NLP domain that may be transferable to time series with minor modifications.
 
-**Scope.** Time series foundation models are pretrained on large, heterogeneous corpora assembled from public archives; the same archives are then used for zero-shot evaluation, so the reported performance may partly reflect memorisation rather than generalisation. *TSFM auditing* asks whether a given dataset (or window) was seen by a target TSFM during pretraining, and to what extent. The problem is well studied for language models, but most LLM methods rely on next-token probabilities, whereas many TSFMs return numerical forecasts without an explicit likelihood, and time series can re-enter a corpus after rescaling, renaming or resampling. This list therefore (i) collects the still-small set of TSFM-specific work, and (ii) curates the LLM and general-ML literature by **how directly each method maps onto TSFMs** — every method entry carries a one-line *transfer* note.
-
-**Two granularities.** *Window / sample level*: given a forecasting window (context + target), decide member vs. non-member. *Dataset level*: given a dataset, estimate the contamination extent, i.e. the fraction of its samples derived from pretraining sources. Dataset-level decisions can be obtained by aggregating window-level scores with a statistical test (see [Dataset-Level Inference](#dataset-level-inference-and-statistical-contamination-tests)).
-
-**Two strategy families.** *Inference-based* methods score the frozen model (forecast loss, likelihood, embeddings, gradients). *Fine-tuning-based* methods perturb the model — fine-tune it briefly on unseen data or on the audited set — and exploit the asymmetry that non-members change more than members. The second family needs no token probabilities and is where LLM work transfers most directly.
-
-**Ground truth.** Members can be taken from the pretraining sources that a model documents (see [Target Models](#target-models-and-their-documented-pretraining-corpora)). Reliable non-members are observations *generated* after the model's release — not merely datasets *published* after it — which avoids both direct sample overlap and indirect temporal leakage. The resulting temporal shift between members and non-members is itself a confounder; see [Pitfalls](#pitfalls-critiques-and-evaluations-of-auditing-methods) before interpreting any AUC.
-
-<details>
-<summary><b>How LLM auditing signals map onto TSFMs (quick reference)</b></summary>
-
-| LLM signal | Requirement | Time-series analogue |
-|---|---|---|
-| Perplexity / loss | any model | Zero-shot forecast error (MSE, MASE, quantile loss) on the target window |
-| Min-K% token probabilities | per-token likelihood | Per-step NLL under a probabilistic head (Moirai, Sundial, TiRex) or token probabilities (Chronos); frequency-domain variant on residuals (TSFMAudit) |
-| Reference-model ratio (LiRA) | reference models | Loss ratio against scratch-trained or non-TS-pretrained references (e.g., VisionTS, TabPFN-TS) |
-| Neighbourhood comparison | perturbations | Loss relative to augmented copies (jitter, scaling, warping, resampling) |
-| Fine-tuned score deviation | fine-tuning access | LoRA-fine-tune on post-release data; compare loss before/after |
-| Embedding geometry shift (KDS) | embeddings | Kernel divergence of hidden-state similarities before/after one epoch on the audited set |
-| Gradient deviation | gradients | Gradient norm / concentration on the forecasting head or adapters |
-| Dataset inference | many samples | Aggregate window scores over a dataset; test against a post-release validation split |
-
-</details>
+**Scope.** Time series foundation models (TSFMs) are pretrained on large, heterogeneous time series corpora. Some evaluation datasets may (partly) overlap with pretraining data, potentially inflating the reported performance and obscuring the models' generalization ability to unseen data. *TSFM auditing* aims to determine whether a given time-series sample or dataset has been seen during the target TSFM's pretraining, and to what extent. While pretraining-data auditing has been extensively studied for large language models (LLMs), many existing methods rely on token probabilities/distributions that are not readily available from TSFMs, which typically output numerical predictions without likelihoods. Moreover, the same underlying time series may reappear under different names, scales, or sampling frequencies, making contamination detection more challenging. This list collects research on pretraining-data auditing for TSFMs, along with relevant methods from the LLM/NLP and broader machine learning literature that are potentially adaptable to time series.
 
 **Legend.** *Level*: `sample` / `dataset` / `both`. *Access*: `black-box` = predictions only · `grey-box` = likelihoods or embeddings · `white-box` = gradients or fine-tuning. *Domain*: `ts` time series · `llm` language models · `ml` general ML.
 
@@ -241,16 +219,6 @@ Widely used evaluation suites, with a note on how (or whether) each handles pret
 | 2021 | [Monash Time Series Forecasting Archive](https://arxiv.org/abs/2105.06643)<br><sub>Rakshitha Godahewa, Christoph Bergmeir, Geoffrey I. Webb, et al.</sub> | NeurIPS 2021 (Datasets and Benchmarks) | The most reused archive in TSFM pretraining; several datasets exist in rescaled/renamed copies (e.g., Elecdemand) | [arXiv](https://arxiv.org/abs/2105.06643) · [Code](https://forecastingdata.org/) |
 
 
-## Maintenance and Auto-Update
-
-`README.md` is generated from [`papers.yaml`](papers.yaml) by [`scripts/build_readme.py`](scripts/build_readme.py). A [GitHub Actions workflow](.github/workflows/arxiv-watch.yml) queries the arXiv API every week for new submissions matching time-series × auditing keyword combinations (and foundation-model auditing methods that may transfer), removes anything already listed or already proposed, and opens a pull request with the candidates in [`candidates/`](candidates/). When the arXiv search API is unavailable (it intermittently rejects automated clients), the watch falls back to harvesting arXiv's OAI-PMH feed for the `cs`/`stat` sets and then to OpenAlex; the source used and per-query counts are recorded in [`data/last_run.json`](data/last_run.json). Nothing enters the list without review. To accept a candidate, run
-
-```bash
-python scripts/add_paper.py <arXiv-id> --category <category-key>   # fetches metadata, appends a stub to papers.yaml
-python scripts/build_readme.py                                      # regenerates README.md
-```
-
-then fill in the `transfer` / `note` line. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow and the category keys.
 
 ## Related Lists
 
