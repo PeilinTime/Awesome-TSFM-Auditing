@@ -25,7 +25,6 @@ body:
         - pitfalls
         - surveys
         - provenance
-        - lookahead
         - tsfm-models
         - ts-benchmarks
     validations:

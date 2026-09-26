@@ -104,14 +104,6 @@ categories:
       release. Time-series watermarking exists for generated data; watermarking public forecasting
       datasets to later prove pretraining use is an open direction.
 
-  - key: lookahead
-    title: "Look-Ahead Bias and Temporal Contamination in LLM-Based Forecasting"
-    layout: method
-    description: >-
-      When an LLM is used as a forecaster, contamination shows up as look-ahead bias: the model has
-      already read the outcome. Detection and prevention techniques here (temporal cut-offs, time-aware
-      pretraining, memorisation filters) parallel the post-release protocol for TSFMs.
-
   - key: tsfm-models
     title: "Target Models and Their Documented Pretraining Corpora"
     layout: model
@@ -688,7 +680,7 @@ papers:
     code: "https://github.com/iamgroot42/mimir"
     category: pitfalls
     domain: llm
-    note: "Large-scale study (Pythia 160M-12B, Pile domains): most attacks ≈ random; apparent success on temporally split data reflects distribution shift, not membership. MIMIR codebase"
+    note: "Large-scale study (Pythia 160M–12B, Pile domains): most attacks ≈ random; apparent success on temporally split data reflects distribution shift, not membership. MIMIR codebase"
 
   - id: blind-baselines
     title: "Blind Baselines Beat Membership Inference Attacks for Foundation Models"
@@ -831,93 +823,6 @@ papers:
     access: black-box
     signal: "Watermarks embedded in the forecasts of LLM-based forecasters"
     transfer: "Output-side provenance for forecasters"
-
-  # ---------------------------------------------------------------------------
-  # Look-ahead bias in LLM-based forecasting
-  # ---------------------------------------------------------------------------
-  - id: lookahead-bias-detect
-    title: "Detecting Lookahead Bias in LLM Forecasts"
-    authors: "Zhenyu Gao, Wenxi Jiang, Yutong Yan"
-    year: 2025
-    venue: "arXiv 2025"
-    arxiv: "2512.23847"
-    code: ""
-    category: lookahead
-    domain: llm
-    level: dataset
-    access: black-box
-    signal: "Statistical tests for forecasts that are 'too good' before vs. after the training cut-off"
-    transfer: "Pre/post-cut-off accuracy contrast is the LLM-forecaster analogue of the post-release protocol"
-
-  - id: memguard-alpha
-    title: "MemGuard-Alpha: Detecting and Filtering Memorization-Contaminated Signals in LLM-Based Financial Forecasting via Membership Inference and Cross-Model Disagreement"
-    authors: "Anisha Roy, Dip Roy"
-    year: 2026
-    venue: "arXiv 2026"
-    arxiv: "2603.26797"
-    code: ""
-    category: lookahead
-    domain: llm
-    level: sample
-    access: black-box
-    signal: "Membership inference plus cross-model disagreement to filter memorised predictions"
-    transfer: "Cross-model disagreement as a contamination signal is model-agnostic"
-
-  - id: lookahead-fast-solution
-    title: "A Fast and Effective Solution to the Problem of Look-ahead Bias in LLMs"
-    authors: "Humzah Merchant, Bradford Levy"
-    year: 2025
-    venue: "NeurIPS 2025 Workshop (GenAI in Finance)"
-    arxiv: "2512.06607"
-    code: "https://github.com/fin-ai-lab/fast-effective-solution-to-lab"
-    category: lookahead
-    domain: llm
-    level: dataset
-    access: white-box
-    signal: "Cheap mitigation of look-ahead bias without full retraining"
-    transfer: "Mitigation side; complements detection"
-
-  - id: datedgpt
-    title: "DatedGPT: Preventing Lookahead Bias in Large Language Models with Time-Aware Pretraining"
-    authors: "Yutong Yan, Raphael Tang, Zhenyu Gao, et al."
-    year: 2026
-    venue: "arXiv 2026"
-    arxiv: "2603.11838"
-    code: ""
-    category: lookahead
-    domain: llm
-    level: dataset
-    access: white-box
-    signal: "Twelve 1.3B models pretrained with annual temporal cut-offs (2013-2024)"
-    transfer: "Temporally partitioned pretraining = clean reference models with known cut-offs"
-
-  - id: chronologically-consistent-llms
-    title: "Chronologically Consistent Large Language Models"
-    authors: "Songrun He, Linying Lv, Asaf Manela, et al."
-    year: 2025
-    venue: "arXiv 2025"
-    arxiv: "2502.21206"
-    code: ""
-    category: lookahead
-    domain: llm
-    level: dataset
-    access: white-box
-    signal: "LLMs trained only on data available before a date, to eliminate look-ahead bias in backtests"
-    transfer: "Same idea as a TSFM pretrained with a global cut-off"
-
-  - id: time-machine-gpt
-    title: "Time Machine GPT"
-    authors: "Felix Drinkall, Eghbal Rahimikia, Janet B. Pierrehumbert, et al."
-    year: 2024
-    venue: "Findings of NAACL 2024"
-    arxiv: "2404.18543"
-    code: ""
-    category: lookahead
-    domain: llm
-    level: dataset
-    access: white-box
-    signal: "Series of point-in-time LLMs that are non-prognosticative by construction"
-    transfer: "Point-in-time models as clean references"
 
   # ---------------------------------------------------------------------------
   # Target models and documented pretraining corpora

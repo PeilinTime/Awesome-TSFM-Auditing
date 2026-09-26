@@ -52,7 +52,7 @@ AUDIT_STRONG = (
     'abs:"training data detection" OR abs:"data contamination" OR abs:"benchmark contamination" OR '
     'abs:"test set contamination" OR abs:"dataset inference" OR abs:"data leakage" OR abs:"information leakage")'
 )
-AUDIT_WEAK = '(abs:memorization OR abs:memorisation OR abs:"lookahead bias" OR abs:"look-ahead bias" OR abs:contamination OR abs:leakage OR abs:auditing)'
+AUDIT_WEAK = '(abs:memorization OR abs:memorisation OR abs:contamination OR abs:leakage OR abs:auditing)'
 
 # (name, query): each query is run once per watch
 QUERIES = [
@@ -82,7 +82,7 @@ AUDIT_TERMS = {
     "training data detection": 3, "dataset inference": 3, "data contamination": 3, "benchmark contamination": 3,
     "test set contamination": 3, "pretraining data": 2, "pre-training data": 2, "contamination": 2,
     "information leakage": 2, "data leakage": 2, "leakage-free": 2, "leakage": 1,
-    "memorization": 1, "memorisation": 1, "lookahead bias": 2, "look-ahead bias": 2, "auditing": 1, "audit": 1,
+    "memorization": 1, "memorisation": 1, "auditing": 1, "audit": 1,
     "provenance": 1, "watermark": 1, "copyright": 1, "unlearning": 1,
 }
 # generic words that also occur in unrelated contexts (cloud contamination, leakage current, financial audit ...):

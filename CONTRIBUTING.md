@@ -6,11 +6,11 @@ Thank you for helping keep this list useful. The list is maintained through a si
 
 A paper belongs here if at least one of the following holds:
 
-1. It audits, attacks, or evaluates the **pretraining / training data of a time-series model** (membership inference, contamination auditing, information leakage, memorisation, look-ahead bias, provenance).
+1. It audits, attacks, or evaluates the **pretraining / training data of a time-series model** (membership inference, contamination auditing, information leakage, memorisation, provenance).
 2. It is an **LLM or general-ML auditing method whose signal a TSFM can provide** (a loss, a likelihood, an embedding, a gradient, or a fine-tuning response), so that it transfers to time series with little modification. In this case the `transfer` field must say *how*.
 3. It documents the **pretraining corpus of a mainstream TSFM** or provides a **leakage-aware benchmark / evaluation protocol**.
 
-Out of scope: general TSFM architecture papers, general time-series privacy (e.g., differential privacy without membership inference), and benchmark contamination detection for LLM evaluation (prompt-based methods such as guided completion, quizzes, or rephrasing tests). The list stays focused on methods that can be applied to TSFMs.
+Out of scope: general TSFM architecture papers, general time-series privacy (e.g., differential privacy without membership inference), benchmark contamination detection for LLM evaluation (prompt-based methods such as guided completion, quizzes, or rephrasing tests), and look-ahead bias in LLM-based forecasting unless the paper provides a detection method that applies to numerical forecasting models. The list stays focused on methods that can be applied to TSFMs.
 
 ## Adding a paper
 
@@ -37,7 +37,6 @@ Open a pull request with the change to `papers.yaml` (and the regenerated `READM
 | `pitfalls` | Pitfalls, Critiques and Evaluations of Auditing Methods |
 | `surveys` | Surveys |
 | `provenance` | Proactive Provenance: Data Watermarks and Copyright Traps |
-| `lookahead` | Look-Ahead Bias and Temporal Contamination in LLM-Based Forecasting |
 | `tsfm-models` | Target Models and Their Documented Pretraining Corpora |
 | `ts-benchmarks` | Benchmarks and Evaluation Suites |
 
