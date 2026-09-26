@@ -32,8 +32,7 @@ categories:
     title: "Auditing Methods for Time Series Foundation Models"
     layout: method
     description: >-
-      Methods whose target is a TSFM. The list is short — this is a new problem — which is why the
-      LLM sections below are curated for transferability.
+      Methods whose target is a TSFM.
 
   - key: tsfm-leakage-eval
     title: "Information Leakage and Leakage-Aware Evaluation of TSFMs"
@@ -48,7 +47,7 @@ categories:
     title: "Membership Inference and Privacy for Time-Series Models"
     layout: method
     description: >-
-      Membership inference on (mostly non-foundation) time-series models. Useful for window-level attack
+      Membership inference on (mostly non-foundation) time-series models. Useful for sample-level attack
       features, sequence-level aggregation, and evaluation protocols specific to temporal data.
 
   - key: llm-finetune
@@ -66,14 +65,14 @@ categories:
     description: >-
       Classic membership inference that needs only a per-sample loss (here: forecast error), optionally
       calibrated by shadow/reference models or by perturbed neighbours. Directly applicable to point
-      forecasters; several are the baselines re-implemented in TSFMAudit.
+      forecasters.
 
   - key: llm-score
     title: "Token-Probability Scoring Functions (require per-step likelihoods)"
     layout: method
     description: >-
       Scores computed from next-token probabilities (Min-K% and descendants). They require a categorical
-      or probabilistic output head, so they transfer to tokenised TSFMs (Chronos-style) or to models with
+      or probabilistic output head, so they transfer to tokenised TSFMs (e.g. Chronos-style) or to models with
       an explicit predictive distribution (Moirai, Sundial, TiRex), but not to point forecasters.
 
   - key: llm-dataset-level
