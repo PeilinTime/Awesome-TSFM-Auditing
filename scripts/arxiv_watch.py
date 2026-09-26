@@ -71,7 +71,9 @@ OPENALEX_QUERIES = [
 OAI_SETS = ("cs", "stat")
 
 # keyword scoring (lower-cased substring matches on title + abstract; title hits count double)
-TS_TERMS = ["time series", "time-series", "forecasting", "forecaster", "temporal data", "sequence model"]
+TS_TERMS = ["time series", "time-series", "forecaster", "temporal data", "sequence model", "forecasting"]
+# "forecasting" alone also matches LLM event-forecasting work; on its own it only qualifies a paper together with a strong audit term
+TS_WEAK = {"forecasting"}
 FM_TERMS = ["foundation model", "language model", "llm", "pretrained", "pre-trained", "pretraining", "pre-training"]
 AUDIT_TERMS = {
     "membership inference": 3, "pretraining data detection": 3, "pre-training data detection": 3,
@@ -113,7 +115,8 @@ def score(e: arxiv_api.Entry) -> dict:
     s += sum(2 if t in title else 1 for t in ts)
     s += 0.5 * len(fm)
     strong = [t for t in audit if t not in WEAK_TERMS]
-    if ts and (strong or (audit and fm)):
+    ts_strong = [t for t in ts if t not in TS_WEAK]
+    if (ts_strong and (strong or (audit and fm))) or (ts and strong):
         tier = "A"
     elif fm and (set(audit) & STRONG_FOR_TIER_B):
         tier = "B"
