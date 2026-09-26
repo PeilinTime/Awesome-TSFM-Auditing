@@ -70,6 +70,10 @@ Keep `signal` and `transfer` to one sentence each, in neutral, technical languag
 
 Sources are tried in order: the arXiv search API (`QUERIES`), then arXiv's OAI-PMH feed (complete harvest of the `cs` and `stat` sets since the window start, filtered locally by the same keyword scoring), then OpenAlex (`OPENALEX_QUERIES`; set a repository variable `OPENALEX_MAILTO` with a contact e-mail to use OpenAlex's polite pool). `data/last_run.json` records which source answered and how many results each query returned; a run that gets nothing from any source fails visibly and does not advance the window.
 
+## Venue updates
+
+Entries are added with the venue known at the time, often just "arXiv <year>". The *Venue check* workflow runs on the first day of each month (and on demand from the Actions tab): for every arXiv-only entry it re-reads the arXiv record and, when the journal-ref field or an acceptance note in the comments names a venue ("Accepted at ICLR 2026"), it opens a pull request that updates the `venue:` line, with the arXiv text quoted as evidence. Comments that merely say "under review" or "submitted to" are ignored. Review the wording before merging; venues can of course also be edited by hand at any time.
+
 To tune what the watch looks for, edit `QUERIES`, `OPENALEX_QUERIES`, `TS_TERMS`, `FM_TERMS` and `AUDIT_TERMS` at the top of `scripts/arxiv_watch.py`, then test with
 
 ```bash

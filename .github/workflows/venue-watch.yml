@@ -1,0 +1,45 @@
+name: Venue check
+
+on:
+  schedule:
+    - cron: "23 7 1 * *"        # first day of every month, 07:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Look up arXiv records for arXiv-only entries
+        id: venues
+        run: python scripts/venue_watch.py
+
+      - name: Regenerate README
+        if: steps.venues.outputs.count != '0'
+        run: python scripts/build_readme.py
+
+      - name: Open review pull request
+        if: steps.venues.outputs.count != '0'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "Venue updates from arXiv records (${{ steps.venues.outputs.date }})"
+          branch: venue-check/${{ steps.venues.outputs.date }}
+          delete-branch: true
+          add-paths: |
+            papers.yaml
+            README.md
+          title: "Venue updates: ${{ steps.venues.outputs.count }} paper(s) now have a publication venue (${{ steps.venues.outputs.date }})"
+          body-path: data/venue_report.md

@@ -35,6 +35,7 @@ class Entry:
     updated: str  # YYYY-MM-DD of latest version
     categories: list[str] = field(default_factory=list)
     comment: str = ""
+    journal_ref: str = ""
 
     @property
     def url(self) -> str:
@@ -70,6 +71,7 @@ def parse_feed(xml_text: str) -> list[Entry]:
                 updated=_clean(e.findtext("atom:updated", default="", namespaces=NS))[:10],
                 categories=[c.get("term", "") for c in e.findall("atom:category", NS)],
                 comment=_clean(e.findtext("arxiv:comment", default="", namespaces=NS)),
+                journal_ref=_clean(e.findtext("arxiv:journal_ref", default="", namespaces=NS)),
             )
         )
     return out
@@ -209,6 +211,7 @@ def parse_oai(xml_text: str) -> tuple[list[Entry], str | None]:
                 or _clean(md.findtext("ax:created", default="", namespaces=OAI_NS))[:10],
                 categories=_clean(md.findtext("ax:categories", default="", namespaces=OAI_NS)).split(),
                 comment=_clean(md.findtext("ax:comments", default="", namespaces=OAI_NS)),
+                journal_ref=_clean(md.findtext("ax:journal-ref", default="", namespaces=OAI_NS)),
             )
         )
     tok = root.find(".//oai:resumptionToken", OAI_NS)
