@@ -1,7 +1,7 @@
 {
  "status": "ok",
- "date": "2026-09-26",
- "window_since": "2026-07-28",
+ "date": "2026-09-28",
+ "window_since": "2026-09-23",
  "queries": [
   {
    "name": "api: ts x audit (strong)",
@@ -9,18 +9,18 @@
    "error": "HTTPError: HTTP Error 406: Not Acceptable"
   },
   {
-   "name": "oai: sets cs,stat from 2026-07-28",
-   "results": 50229,
-   "newest": "2026-09-24"
+   "name": "oai: sets cs,stat from 2026-09-23",
+   "results": 3218,
+   "newest": "2026-09-25"
   }
  ],
  "stats": {
   "source": "oai",
   "queries": 2,
-  "fetched": 50229,
-  "in_window": 36124,
-  "dropped_seen": 1,
-  "dropped_offtopic": 36062,
-  "new": 61
+  "fetched": 3218,
+  "in_window": 2313,
+  "dropped_seen": 2,
+  "dropped_offtopic": 2310,
+  "new": 1
  }
 }
