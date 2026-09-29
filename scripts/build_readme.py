@@ -155,8 +155,14 @@ def validate(data: dict) -> list[str]:
 
 # ----------------------------------------------------------------------------- rendering
 def h(text) -> str:
-    """Escape text for an HTML cell and render the little markdown we use in notes (`code`, *em*, **strong**)."""
+    """Escape text for an HTML cell and render the little markdown we use in notes (`code`, *em*, **strong**).
+
+    A <wbr> after every "/" lets long tokens such as dataset paths (autogluon/chronos_datasets) or
+    "univariate/multivariate" wrap: browsers do not break at slashes, and one unbreakable token sets
+    the minimum width of its whole column, which is what pushed the tables past the page width.
+    Bare URLs are left alone so GitHub still turns them into links."""
     t = html.escape(re.sub(r"\s+", " ", str(text or "")).strip(), quote=False)
+    t = " ".join(w if re.match(r"(?i)(https?://|www\.)", w) else w.replace("/", "/<wbr>") for w in t.split(" "))
     t = re.sub(r"`([^`]+)`", r"<code>\1</code>", t)
     t = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", t)
     t = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", t)
@@ -210,24 +216,27 @@ def html_abstract_row(p: dict, ncols: int) -> str:
 
 
 LAYOUTS_HTML = {
-    # layout: (header cells with width hints, row-builder)
+    # layout: (header cells, row-builder)
+    # Only the text columns carry a width hint. The narrow columns (year, venue, links) take their natural
+    # width instead: a percentage smaller than their content would force the table wider than the page.
+    # GitHub renders the README in a column of about 840px, so the hints leave roughly 25-30% for them.
     "method": (
-        ['<th width="4%">Year</th>', '<th width="31%">Paper</th>', '<th width="6%">Venue</th>',
-         '<th width="26%">Signal</th>', '<th width="26%">Transfer to TSFMs</th>', '<th width="5%">Links</th>'],
+        ['<th>Year</th>', '<th width="32%">Paper</th>', '<th>Venue</th>',
+         '<th width="22%">Signal</th>', '<th width="22%">Transfer to TSFMs</th>', '<th>Links</th>'],
         lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("signal")), h(p.get("transfer") or p.get("note")), html_links(p)],
     ),
     "model": (
-        ['<th width="6%">arXiv v1</th>', '<th width="30%">Model and paper</th>', '<th width="6%">Venue</th>',
-         '<th width="30%">Documented pretraining corpus</th>', '<th width="20%">Output / note</th>', '<th width="6%">Links</th>'],
+        ['<th>arXiv v1</th>', '<th width="32%">Model and paper</th>', '<th>Venue</th>',
+         '<th width="25%">Documented pretraining corpus</th>', '<th width="14%">Output / note</th>', '<th>Links</th>'],
         lambda p: [arxiv_month(p).replace("-", "&#8209;"), f"<strong>{h(p.get('model') or p['title'])}</strong><br>{html_paper_cell(p)}",
                    h(p["venue"]), h(p.get("corpus")), h(p.get("note")), html_links(p)],
     ),
     "benchmark": (
-        ['<th width="4%">Year</th>', '<th width="36%">Paper</th>', '<th width="6%">Venue</th>', '<th width="46%">Leakage handling / note</th>', '<th width="6%">Links</th>'],
+        ['<th>Year</th>', '<th width="34%">Paper</th>', '<th>Venue</th>', '<th width="42%">Leakage handling / note</th>', '<th>Links</th>'],
         lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("note") or p.get("transfer")), html_links(p)],
     ),
     "plain": (
-        ['<th width="4%">Year</th>', '<th width="36%">Paper</th>', '<th width="6%">Venue</th>', '<th width="46%">Takeaway</th>', '<th width="6%">Links</th>'],
+        ['<th>Year</th>', '<th width="34%">Paper</th>', '<th>Venue</th>', '<th width="42%">Takeaway</th>', '<th>Links</th>'],
         lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("note") or p.get("transfer")), html_links(p)],
     ),
 }
