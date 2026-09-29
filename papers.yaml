@@ -77,13 +77,12 @@ categories:   # emoji: shown in front of the section heading and in the table of
 
   - key: llm-finetune
     emoji: "🎛️"
-    title: "Fine-Tuning and Adaptation-Dynamics-Based Detection (most transferable)"
+    title: "Fine-Tuning and Adaptation-Dynamics-Based Detection"
     layout: method
     description: >-
       Methods that perturb the model (fine-tune it on unseen data, or on the audited set itself) and
-      measure how members and non-members respond differently. They do not need token probabilities,
-      only a loss, an embedding, or a gradient, all of which every TSFM provides, so they transfer
-      with the fewest modifications. TSFMAudit belongs to this family.
+      measure how members and non-members respond differently. They do not require token probabilities,
+      only a loss, an embedding, or a gradient, all of which every TSFM provides.
 
   - key: llm-loss-reference
     emoji: "📉"
@@ -96,12 +95,12 @@ categories:   # emoji: shown in front of the section heading and in the table of
 
   - key: llm-score
     emoji: "🎲"
-    title: "Token-Probability Scoring Functions (require per-step likelihoods)"
+    title: "Token-Probability Scoring Functions"
     layout: method
     description: >-
-      Scores computed from next-token probabilities (Min-K% and descendants). They require a categorical
-      or probabilistic output head, so they transfer to tokenised TSFMs (e.g. Chronos-style) or to models with
-      an explicit predictive distribution (Moirai, Sundial, TiRex), but not to point forecasters.
+      Membership scores computed from token-level probabilities or conditional likelihoods (e.g., Min-K%, 
+      ReCaLL, and Infilling Score). These methods may be adapted to tokenized TSFMs that provide the required 
+      probability outputs (e.g., Chronos-T5).
 
   - key: llm-dataset-level
     emoji: "🧮"
