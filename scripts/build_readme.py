@@ -173,7 +173,7 @@ def html_links(p: dict) -> str:
         out.append(f'<a href="{html.escape(p["code"])}">Code</a>')
     if p.get("corpus_url"):
         out.append(f'<a href="{html.escape(p["corpus_url"])}">Corpus</a>')
-    return " ".join(out)
+    return "<br>".join(out)
 
 
 def html_badges(p: dict) -> str:
@@ -213,20 +213,21 @@ LAYOUTS_HTML = {
     # layout: (header cells with width hints, row-builder)
     "method": (
         ['<th width="4%">Year</th>', '<th width="31%">Paper</th>', '<th width="6%">Venue</th>',
-         '<th width="26%">Signal</th>', '<th width="28%">Transfer to TSFMs</th>', '<th width="5%">Links</th>'],
+         '<th width="26%">Signal</th>', '<th width="26%">Transfer to TSFMs</th>', '<th width="5%">Links</th>'],
         lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("signal")), h(p.get("transfer") or p.get("note")), html_links(p)],
     ),
     "model": (
-        ['<th width="6%">arXiv v1</th>', '<th width="9%">Model</th>', '<th width="27%">Paper</th>', '<th width="6%">Venue</th>',
-         '<th width="26%">Documented pretraining corpus</th>', '<th width="19%">Output / note</th>', '<th width="7%">Links</th>'],
-        lambda p: [arxiv_month(p), f"<strong>{h(p.get('model') or p['title'])}</strong>", html_paper_cell(p), h(p["venue"]), h(p.get("corpus")), h(p.get("note")), html_links(p)],
+        ['<th width="6%">arXiv v1</th>', '<th width="30%">Model and paper</th>', '<th width="6%">Venue</th>',
+         '<th width="30%">Documented pretraining corpus</th>', '<th width="20%">Output / note</th>', '<th width="6%">Links</th>'],
+        lambda p: [arxiv_month(p).replace("-", "&#8209;"), f"<strong>{h(p.get('model') or p['title'])}</strong><br>{html_paper_cell(p)}",
+                   h(p["venue"]), h(p.get("corpus")), h(p.get("note")), html_links(p)],
     ),
     "benchmark": (
-        ['<th width="4%">Year</th>', '<th width="36%">Paper</th>', '<th width="6%">Venue</th>', '<th width="48%">Leakage handling / note</th>', '<th width="6%">Links</th>'],
+        ['<th width="4%">Year</th>', '<th width="36%">Paper</th>', '<th width="6%">Venue</th>', '<th width="46%">Leakage handling / note</th>', '<th width="6%">Links</th>'],
         lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("note") or p.get("transfer")), html_links(p)],
     ),
     "plain": (
-        ['<th width="4%">Year</th>', '<th width="36%">Paper</th>', '<th width="6%">Venue</th>', '<th width="48%">Takeaway</th>', '<th width="6%">Links</th>'],
+        ['<th width="4%">Year</th>', '<th width="36%">Paper</th>', '<th width="6%">Venue</th>', '<th width="46%">Takeaway</th>', '<th width="6%">Links</th>'],
         lambda p: [str(p["year"]), html_paper_cell(p), h(p["venue"]), h(p.get("note") or p.get("transfer")), html_links(p)],
     ),
 }
