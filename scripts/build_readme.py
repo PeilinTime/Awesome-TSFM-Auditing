@@ -157,12 +157,20 @@ def validate(data: dict) -> list[str]:
 def h(text) -> str:
     """Escape text for an HTML cell and render the little markdown we use in notes (`code`, *em*, **strong**).
 
-    A <wbr> after every "/" lets long tokens such as dataset paths (autogluon/chronos_datasets) or
-    "univariate/multivariate" wrap: browsers do not break at slashes, and one unbreakable token sets
-    the minimum width of its whole column, which is what pushed the tables past the page width.
-    Bare URLs are left alone so GitHub still turns them into links."""
+    A zero-width space after the "/" in prose pairs such as "univariate/multivariate" or
+    "member/non-member" lets them wrap: browsers do not break at slashes, and one unbreakable token
+    sets the minimum width of its whole column, which is what pushed the tables past the page width.
+    (GitHub strips <wbr>, so the entity is used.) Only lower-case word pairs get one: URLs, `code`
+    spans and identifiers such as AutonLab/MOMENT-1-large stay untouched, so links still autolink
+    and names copy cleanly."""
     t = html.escape(re.sub(r"\s+", " ", str(text or "")).strip(), quote=False)
-    t = " ".join(w if re.match(r"(?i)(https?://|www\.)", w) else w.replace("/", "/<wbr>") for w in t.split(" "))
+    parts = re.split(r"(`[^`]+`)", t)
+    for i in range(0, len(parts), 2):  # even parts are outside `code` spans
+        parts[i] = " ".join(
+            w if re.match(r"(?i)(https?://|www\.)", w) else re.sub(r"(?<=[a-z])/(?=[a-z])", "/&#8203;", w)
+            for w in parts[i].split(" ")
+        )
+    t = "".join(parts)
     t = re.sub(r"`([^`]+)`", r"<code>\1</code>", t)
     t = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", t)
     t = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", t)
