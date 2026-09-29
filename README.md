@@ -1,5 +1,5 @@
 <!-- THIS FILE IS GENERATED from papers.yaml by scripts/build_readme.py; edit papers.yaml, not README.md -->
-# Awesome TSFM Auditing [![Awesome](https://awesome.re/badge.svg)](https://awesome.re) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![arXiv watch](https://github.com/PeilinTime/Awesome-TSFM-Auditing/actions/workflows/arxiv-watch.yml/badge.svg)](https://github.com/PeilinTime/Awesome-TSFM-Auditing/actions/workflows/arxiv-watch.yml) ![papers](https://img.shields.io/badge/papers-75-blue) ![updated](https://img.shields.io/badge/updated-2026-09-26-lightgrey)
+# Awesome TSFM Auditing [![Awesome](https://awesome.re/badge.svg)](https://awesome.re) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![arXiv watch](https://github.com/PeilinTime/Awesome-TSFM-Auditing/actions/workflows/arxiv-watch.yml/badge.svg)](https://github.com/PeilinTime/Awesome-TSFM-Auditing/actions/workflows/arxiv-watch.yml) ![papers](https://img.shields.io/badge/papers-75-blue) ![updated](https://img.shields.io/badge/updated-2026-09-29-lightgrey)
 
 A curated list of papers on **auditing the pretraining data of time series foundation models (TSFMs)**: pretraining-data / contamination auditing, membership inference, information leakage in TSFM evaluation, and relevant methods from the LLM/NLP domain that may be transferable to time series with minor modifications.
 
@@ -24,9 +24,9 @@ A curated list of papers on **auditing the pretraining data of time series found
 - [🕵️ Auditing Methods for Time Series Foundation Models](#tsfm-auditing) (1)
 - [💧 Information Leakage and Leakage-Aware Evaluation of TSFMs](#tsfm-leakage-eval) (7)
 - [🔐 Membership Inference and Privacy for Time-Series Models](#ts-mia) (3)
-- [🎛️ Fine-Tuning and Adaptation-Dynamics-Based Detection (most transferable)](#llm-finetune) (5)
+- [🎛️ Fine-Tuning and Adaptation-Dynamics-Based Detection](#llm-finetune) (5)
 - [📉 Loss-, Reference- and Gradient-Based Membership Inference (model-agnostic)](#llm-loss-reference) (8)
-- [🎲 Token-Probability Scoring Functions (require per-step likelihoods)](#llm-score) (10)
+- [🎲 Token-Probability Scoring Functions](#llm-score) (10)
 - [🧮 Dataset-Level Inference and Statistical Contamination Tests](#llm-dataset-level) (5)
 - [⚠️ Pitfalls, Critiques and Evaluations of Auditing Methods](#pitfalls) (5)
 - [📚 Surveys](#surveys) (2)
@@ -90,9 +90,9 @@ Membership inference on (mostly non-foundation) time-series models. Useful for s
 </table>
 
 <a id="llm-finetune"></a>
-## 🎛️ Fine-Tuning and Adaptation-Dynamics-Based Detection (most transferable)
+## 🎛️ Fine-Tuning and Adaptation-Dynamics-Based Detection
 
-Methods that perturb the model (fine-tune it on unseen data, or on the audited set itself) and measure how members and non-members respond differently. They do not need token probabilities, only a loss, an embedding, or a gradient, all of which every TSFM provides, so they transfer with the fewest modifications. TSFMAudit belongs to this family.
+Methods that perturb the model (fine-tune it on unseen data, or on the audited set itself) and measure how members and non-members respond differently. They do not require token probabilities, only a loss, an embedding, or a gradient, all of which every TSFM provides.
 
 <table>
 <thead><tr><th width="4%">Year</th><th width="31%">Paper</th><th width="6%">Venue</th><th width="26%">Signal</th><th width="28%">Transfer to TSFMs</th><th width="5%">Links</th></tr></thead>
@@ -138,9 +138,9 @@ Classic membership inference that needs only a per-sample loss (here: forecast e
 </table>
 
 <a id="llm-score"></a>
-## 🎲 Token-Probability Scoring Functions (require per-step likelihoods)
+## 🎲 Token-Probability Scoring Functions
 
-Scores computed from next-token probabilities (Min-K% and descendants). They require a categorical or probabilistic output head, so they transfer to tokenised TSFMs (e.g. Chronos-style) or to models with an explicit predictive distribution (Moirai, Sundial, TiRex), but not to point forecasters.
+Membership scores computed from token-level probabilities or conditional likelihoods (e.g., Min-K%,  ReCaLL, and Infilling Score). These methods may be adapted to tokenized TSFMs that provide the required  probability outputs (e.g., Chronos-T5).
 
 <table>
 <thead><tr><th width="4%">Year</th><th width="31%">Paper</th><th width="6%">Venue</th><th width="26%">Signal</th><th width="28%">Transfer to TSFMs</th><th width="5%">Links</th></tr></thead>
