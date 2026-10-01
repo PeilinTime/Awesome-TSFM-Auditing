@@ -188,7 +188,7 @@ papers:
     title: "TS-Arena – A Live Forecast Pre-Registration Platform"
     authors: "Marcel Meyer, Sascha Kaltenpoth, Henrik Albers, et al."
     year: 2025
-    venue: "arXiv 2025"
+    venue: "KDD 2026"
     arxiv: "2512.20761"
     code: "https://github.com/DAG-UPB/ts-arena"
     category: tsfm-leakage-eval
@@ -1074,7 +1074,7 @@ papers:
     title: "Kairos: Toward Adaptive and Parameter-Efficient Time Series Foundation Models"
     authors: "Kun Feng, Shaocheng Lan, Yuchen Fang, et al."
     year: 2025
-    venue: "arXiv 2025"
+    venue: "NeurIPS 2026"
     arxiv: "2509.25826"
     code: ""
     category: tsfm-models
