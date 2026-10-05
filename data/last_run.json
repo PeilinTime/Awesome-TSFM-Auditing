@@ -1,26 +1,36 @@
 {
  "status": "ok",
- "date": "2026-09-28",
- "window_since": "2026-09-23",
+ "date": "2026-10-05",
+ "window_since": "2026-09-25",
  "queries": [
   {
    "name": "api: ts x audit (strong)",
-   "results": 0,
-   "error": "HTTPError: HTTP Error 406: Not Acceptable"
+   "results": 78,
+   "newest": "2026-09-30"
   },
   {
-   "name": "oai: sets cs,stat from 2026-09-23",
-   "results": 3218,
-   "newest": "2026-09-25"
+   "name": "api: ts x audit (weak)",
+   "results": 150,
+   "newest": "2026-10-02"
+  },
+  {
+   "name": "api: tsfm x leakage/eval",
+   "results": 150,
+   "newest": "2026-10-01"
+  },
+  {
+   "name": "api: fm x membership/pretraining-data",
+   "results": 150,
+   "newest": "2026-10-02"
   }
  ],
  "stats": {
-  "source": "oai",
-  "queries": 2,
-  "fetched": 3218,
-  "in_window": 2313,
-  "dropped_seen": 2,
-  "dropped_offtopic": 2310,
-  "new": 1
+  "source": "api",
+  "queries": 4,
+  "fetched": 528,
+  "in_window": 17,
+  "dropped_seen": 1,
+  "dropped_offtopic": 10,
+  "new": 6
  }
 }
