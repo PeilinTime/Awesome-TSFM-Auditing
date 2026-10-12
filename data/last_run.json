@@ -1,36 +1,36 @@
 {
  "status": "ok",
- "date": "2026-10-05",
- "window_since": "2026-09-25",
+ "date": "2026-10-12",
+ "window_since": "2026-10-02",
  "queries": [
   {
    "name": "api: ts x audit (strong)",
-   "results": 78,
-   "newest": "2026-09-30"
+   "results": 79,
+   "newest": "2026-10-09"
   },
   {
    "name": "api: ts x audit (weak)",
    "results": 150,
-   "newest": "2026-10-02"
+   "newest": "2026-10-09"
   },
   {
    "name": "api: tsfm x leakage/eval",
    "results": 150,
-   "newest": "2026-10-01"
+   "newest": "2026-10-09"
   },
   {
    "name": "api: fm x membership/pretraining-data",
    "results": 150,
-   "newest": "2026-10-02"
+   "newest": "2026-10-07"
   }
  ],
  "stats": {
   "source": "api",
   "queries": 4,
-  "fetched": 528,
-  "in_window": 17,
+  "fetched": 529,
+  "in_window": 24,
   "dropped_seen": 1,
-  "dropped_offtopic": 10,
-  "new": 6
+  "dropped_offtopic": 18,
+  "new": 5
  }
 }
